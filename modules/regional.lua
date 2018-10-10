@@ -115,12 +115,14 @@ function regional.enforcement(entity)
     end
     for k,v in pairs(allowed) do
         --Furnaces
-        if entity.type == "furnace" and v.subgroup.name == "raw-material" then
-            return true
-        end
-        local recipe = entity.get_recipe()
-        if recipe and recipe.subgroup == v.subgroup and regional.get_range_squared(entity.position, v.position) < regional.RANGE^2 then
-            return
+        if regional.get_range_squared(entity.position, v.position) < regional.RANGE^2 then
+            if entity.type == "furnace" and v.subgroup.name == "raw-material" then
+                return true
+            end
+            local recipe = entity.get_recipe()
+            if recipe and recipe.subgroup == v.subgroup then
+                return
+            end
         end
     end
     --Still here?  Shut it down!
@@ -132,10 +134,7 @@ function regional.enforcement(entity)
         entity.order_deconstruction(entity.force)
         return true
     end
-    -- We shouldn't be here anymore if this is a furnace.  Not sure why this is required.
-    --if entity.type == "assembling-machine" then
-        entity.set_recipe(nil)
-    --end
+    entity.set_recipe(nil)
 end
 
 --Old method per recipe basis
@@ -161,12 +160,23 @@ end
 function regional.discovered(event)
     local force = event.force
     local area = {{event.position.x * 32, event.position.y * 32}, {(event.position.x + 1) * 32, (event.position.y + 1) * 32}}
-    local regions = game.surfaces[event.surface_index].find_entities_filtered{type="constant-combinator", area=area}
+    local surface = game.surfaces[event.surface_index]
+    local regions = surface.find_entities_filtered{type="constant-combinator", area=area}
     for k,v in pairs(regions) do
         if v.operable == false then
             --log("Adding chart tag")
             local signal = v.get_control_behavior().get_signal(1).signal
-            force.add_chart_tag(game.surfaces[event.surface_index], {position = v.position, icon=signal} )
+            local tags = force.find_chart_tags(surface, area)
+            local discovered = false
+            for __,tag in pairs(tags) do
+                if tag.icon.name == signal.name then
+                    discovered = true
+                    break
+                end
+            end
+            if not discovered then
+                force.add_chart_tag(surface, {position = v.position, icon=signal} )
+            end
             --force.add_chart_tag(game.surfaces[event.surface_index], {position = v.position, text=signal.name} )
         end
     end
