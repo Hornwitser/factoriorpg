@@ -20,7 +20,7 @@ function antigrief.arty_remote_ban(event)
     --Ghosts don't count!  They can't be damaged.
     count = count - ghosts
 
-    if event.item.name == "artillery-targeting-remote" and count > 30 then
+    if event.item.name == "artillery-targeting-remote" and count > 40 then
         antigrief.kick(player)
         antigrief.alert(player.name .. " is using an artillery remote maliciously.", player.character)
     -- elseif string.find(event.item.name, "grenade") and player.surface.count_entities_filtered{force=player.force, area=area, name="steam-engine"} > 20 then --Grenading power
@@ -102,11 +102,11 @@ end
 function antigrief.kick(player, reason)
     reason = reason or "griefing (automoderator)"
     if player.permission_group.name == "trusted" or player.online_time > antigrief.TROLL_TIMER then
-        if not global.antigrief.warned[player.name] then
+        --if not global.antigrief.warned[player.name] then
             global.antigrief.warned[player.name] = true
             game.kick_player(player, reason)
             return
-        end
+        --end
     end
     --still here?  We have not yet found a reason to only kick, so ban.
     game.ban_player(player, reason .. " to appeal message on discord.")
