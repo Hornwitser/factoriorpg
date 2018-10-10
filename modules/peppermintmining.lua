@@ -41,7 +41,8 @@ function peppermint.mark(event)
         return
     end
 
-    local ores = player.surface.find_entities_filtered{type="resource", area=event.area}
+    peppermint.pull_taffy()
+    local ores = player.surface.find_entities_filtered{name=peppermint.allowed, area=event.area, limit=10000}
     if #ores == 0 then return end
 
     if event.alt then --Remove, not add.
@@ -81,19 +82,19 @@ function peppermint.mark(event)
         end
     end
 
-    --Filter out non-mineable ores.
-    for i = #ores, 1, -1 do
-        if ores[i].prototype.resource_category == "basic-fluid"
-            or ores[i].prototype.mineable_properties.required_fluid
-            or ores[i].prototype.infinite_resource
-            or ores[i].prototype.mineable_properties.hardness > 100 then
-                table.remove(ores, i)
-        end
-    end
+    -- This section obsoleted by passting a table to find_entities_filtered
+    -- --Filter out non-mineable ores.
+    -- peppermint.pull_taffy()
+    -- for i = #ores, 1, -1 do
+    --     if not peppermint.allowed[ores[i].name] then
+    --         table.remove(ores, i)
+    --     end
+    -- end
     
     --Ensure that a roboport is in range and it's not a player roboport.
+    local get_network = player.surface.find_logistic_networks_by_construction_area
     for i = #ores, 1, -1 do
-        local networks = player.surface.find_logistic_networks_by_construction_area(ores[i].position, force)
+        local networks = get_network(ores[i].position, force)
         if #networks == 0 then
             table.remove(ores, i)
         else
@@ -141,7 +142,7 @@ end
 
 --Iterate over each force.
 function peppermint.stretch(event)
-    if (game.tick + 13) % 60 ~= 0 then
+    if (game.tick + 13) % 40 ~= 0 then
         return
     end 
     for name, minty in pairs(global.peppermint) do
@@ -189,9 +190,9 @@ function peppermint.mine(name, minty)
     local count = math.floor(network.available_construction_robots / 2)
 
     --Modify force construction limit since this mod can easily spam more than enough requests!
-    --This is on a per tick basis, and we check every 60 ticks.
-    if force.max_successful_attemps_per_tick_per_construction_queue * 60 < count then
-        force.max_successful_attemps_per_tick_per_construction_queue = math.floor(count / 60)
+    --This is on a per tick basis, and we check every 40 ticks.
+    if force.max_successful_attemps_per_tick_per_construction_queue * 40 < count then
+        force.max_successful_attemps_per_tick_per_construction_queue = math.floor(count / 40)
     end
 
     --Reused from Nougat Mining
@@ -273,7 +274,8 @@ end
 function peppermint.add(ore, forcename)
     local minty = global.peppermint[forcename]
     --local x, y = math.floor(ore.position.x), math.floor(ore.position.y)
-    local key = math.floor(ore.position.x) .. "," .. math.floor(ore.position.y)
+    local pos = ore.position
+    local key = math.floor(pos.x) .. "," .. math.floor(pos.y)
     if not minty.ores[key] then
         minty.ores[key] = ore
         return true
@@ -354,6 +356,21 @@ function peppermint.reset_picker(forcename)
         local k = math.random(n)
         picker[n], picker[k] = picker[k], picker[n]
         n = n - 1
+    end
+end
+
+--Set up list of allowed ores
+function peppermint.pull_taffy()
+    if peppermint.allowed then return end
+    peppermint.allowed = {}
+    for _, ore in pairs(game.entity_prototypes) do
+        if ore.type == "resource"
+        and ore.resource_category == "basic-solid"
+        and not ore.mineable_properties.required_fluid
+        and not ore.infinite_resource
+        and ore.mineable_properties.hardness < 100 then
+            table.insert(peppermint.allowed, ore.name)
+        end
     end
 end
 
