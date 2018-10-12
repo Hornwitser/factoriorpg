@@ -40,15 +40,15 @@ require "modules/votekick" --Allows users to kick other users.
 --require "modules/lazybastard" --Much slower crafting speed
 require "modules/playerlist" --List of online players
 require "modules/rainbow" --Top of the line graphics!
-require "modules/regional" --Regional Crafting, goods must be produced near matching region markers
+--require "modules/regional" --Regional Crafting, goods must be produced near matching region markers
 --require "rpg_pocket_crafter" --Pocket crafting!
 require "modules/nyan" --More silliness.
 
 -- World Generators: Most are exclusive.
 --require "maps/prospector" --Radars generate ore
 --require "maps/TTSFN" --This Tank Stops for Nobody!
---require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
-require "modules/divOresity" --Some ore gets scrambled and must be filtered. Must be called after dangOreus if using perlin mode.
+require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
+--require "modules/divOresity" --Some ore gets scrambled and must be filtered. Must be called after dangOreus if using perlin mode.
 --require "maps/searious" --Everything not a resource tile is turned into water.
 --require "oarc_events" --Oarc's separate spawn scenario.
 --require "maps/heximaze" --A labyrinth.

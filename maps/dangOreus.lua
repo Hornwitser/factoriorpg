@@ -7,7 +7,7 @@ STARTING_RADIUS = 80
 EASY_ORE_RADIUS = 120
 ORE_SCALING = 0.78 --Exponent for ore amount.
 LINEAR_SCALAR = 8 -- For ore amount.
-DANGORE_MODE = 2 -- 1 == Random, 2 == Perlin
+DANGORE_MODE = 3 -- 1 == Random, 2 == Perlin, 3 == Pie
 
 if MODULE_LIST then
 	module_list_add("dangOreus")
@@ -131,7 +131,7 @@ function gOre(event)
                     local type
                     if DANGORE_MODE == 1 then
                         type = ore_list[math.random(#ore_list)]
-                    else
+                    elseif DANGORE_MODE == 2 then
                         --With noise
                         --Using Perlin noise.
                         --Using Fixed threshholds
@@ -160,6 +160,18 @@ function gOre(event)
                             local _
                             _, type = next(global.perlin_ore_list)
                         end
+                    elseif DANGORE_MODE == 3 then
+                        --We need a number from 0 to 1
+                        local rad = (math.atan2(y, x) + global.pie.rotation) % (math.pi * 2) / (math.pi * 2)
+                        --log(rad)
+                        for _, ore in pairs(global.pie.ores) do
+                            if rad < ore[2] then
+                                type = ore[1]
+                                break
+                            end
+                        end
+                        --Default case.  Shouldn't need this!
+                        type = type or global.pie.ores[1][1]
                     end
 
                     event.surface.create_entity{name=type, amount=amount, position={x, y}, enable_tree_removal=false, enable_cliff_removal=false}
@@ -189,6 +201,10 @@ function dangOre(event)
     end
     --Some entities have no bounding box area.  Not sure which.
     if event.created_entity.bounding_box.left_top.x == event.created_entity.bounding_box.right_bottom.x or event.created_entity.bounding_box.left_top.y == event.created_entity.bounding_box.right_bottom.y then
+        return
+    end
+    --Train stuff has a bbox different from the tracks its placed on
+    if entity.create_entity.type == "locomotive" or entity.create_entity.type == "fluid-wagon" or entity.create_entity.type == "cargo-wagon" then
         return
     end
     if settings.global["easy mode"].value then --Dificulty setting
@@ -237,25 +253,25 @@ function ore_rly(event)
 end
 
 --Unchart one random chunk per minute to keep the map remotely sane.
-function unchOret(event)
-    if not (event.tick % (60*60) == 0) then
-        return
-    end
+-- function unchOret(event)
+--     if not (event.tick % (60*60) == 0) then
+--         return
+--     end
 
-    local chunks = {}
-    for chunk in game.surfaces[1].get_chunks() do
-        if game.forces.player.is_chunk_charted("1", {chunk.x, chunk.y}) then
-            if not game.forces.player.is_chunk_visible("1", {chunk.x, chunk.y}) then
-                table.insert(chunks, {x=chunk.x, y=chunk.y})
-            end
-        end
-    end
+--     local chunks = {}
+--     for chunk in game.surfaces[1].get_chunks() do
+--         if game.forces.player.is_chunk_charted("1", {chunk.x, chunk.y}) then
+--             if not game.forces.player.is_chunk_visible("1", {chunk.x, chunk.y}) then
+--                 table.insert(chunks, {x=chunk.x, y=chunk.y})
+--             end
+--         end
+--     end
 
-    if #chunks > 0 then
-        local chunk = chunks[math.random(#chunks)]
-        game.forces.player.unchart_chunk({chunk.x, chunk.y}, "1")
-    end
-end
+--     if #chunks > 0 then
+--         local chunk = chunks[math.random(#chunks)]
+--         game.forces.player.unchart_chunk({chunk.x, chunk.y}, "1")
+--     end
+-- end
 
 --Limit exploring
 function flOre_is_lava(event)
@@ -266,16 +282,24 @@ function flOre_is_lava(event)
         if not p.character then --Spectator or admin
             return
         end
-        if math.abs(p.position.x) > global.EASY_ORE_RADIUS or math.abs(p.position.y) > global.EASY_ORE_RADIUS then
+        if math.abs(p.position.x) > EASY_ORE_RADIUS or math.abs(p.position.y) > EASY_ORE_RADIUS then
             --Check for nearby ore.
-            local count = p.surface.count_entities_filtered{type="resource", area={{p.position.x-10, p.position.y-10}, {p.position.x+10, p.position.y+10}}}
-            if count > 350 then
+            if not global.flOre then global.flOre = {} end
+            local distance = global.flOre[p.name] or 1
+            local count = p.surface.count_entities_filtered{type="resource", area={{p.position.x-(10*distance), p.position.y-(10*distance)}, {p.position.x+(10*distance), p.position.y+(10*distance)}}}
+            if count > (distance * 20) ^2 * 0.7 then
+                global.flOre[p.name] = distance + 1
                 if p.vehicle then
                     p.surface.create_entity{name="acid-projectile-purple", target=p.vehicle, position=p.vehicle.position, speed=10}
-                    p.vehicle.health = p.vehicle.health - 50
+                    p.vehicle.health = p.vehicle.health - 50 * distance
                 else
                     p.surface.create_entity{name="acid-projectile-purple", target=p.character, position=p.character.position, speed=10}
-                    p.character.health = p.character.health - 10
+                    p.character.health = p.character.health - 20 * distance
+                end
+            else
+                global.flOre[p.name] = distance - 1
+                if global.flOre[p.name] <= 0 then
+                    global.flOre[p.name] = nil
                 end
             end
         end
@@ -410,7 +434,7 @@ function divOresity_init()
 
     --Calculate ore distribution from 0 to 1.
     local last_key = 0
-    local ore_ranking_size = 0 --Essentially #ore_ranking_raw
+    --local ore_ranking_size = 0 --Essentially #ore_ranking_raw
     for k,v in pairs(ore_ranking_raw) do
         local key = last_key + v.amount / ore_total
         last_key = key
@@ -477,6 +501,17 @@ function divOresity_init()
 
         -- perlin_ore_list[math.abs(k)^0.5 * sign] = v
         -- perlin_ore_list[k] = v
+
+        --Pie mode
+        --We already have the ore_ranking so let's copy it to our global table.
+        global.pie = {rotation = math.random() * 2 * math.pi, ores = {}}
+
+        for _, ore in pairs(ore_ranking) do
+            table.insert(global.pie.ores, ore)
+        end
+        --log(serpent.block(global.pie.ores))
+
+
     end
 
     -- For debugging
