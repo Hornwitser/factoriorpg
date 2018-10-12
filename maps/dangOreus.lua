@@ -89,7 +89,11 @@ function gOre(event)
         --If type is random, chance chunk type is different.
         if chunk_type == "random" then
             if math.random() < 0.25 then
-                chunk_type = global.diverse_ore_list[math.random(#global.diverse_ore_list)]
+                if math.max(math.abs(chunkx), math.abs(chunkx+32))^2 + math.max(math.abs(chunky), math.abs(chunky+32))^2 > EASY_ORE_RADIUS^2 then
+                    chunk_type = global.diverse_ore_list[math.random(#global.diverse_ore_list)]
+                else
+                    chunk_type = global.easy_ore_list[math.random(#global.diverse_ore_list)]
+                end
             end
         else
             if math.random() < 0.25 then
