@@ -1,12 +1,8 @@
 --When loading a save, these will be overwritten by what the save was generated with.
 global.STARTING_RADIUS = settings.global["starting radius"].value
 global.EASY_ORE_RADIUS = settings.global["simple ore radius"].value
-<<<<<<< HEAD
 global.DANGORE_MODE = settings.global["dangOre mode"].value
-=======
-global.DANGORE_MODE = settings.global["dangore mode"].value
 global.V_SCALE_FACTOR = settings.global["voronoi scale factor"].value
->>>>>>> pr/9
 
 --dangOreus, a scenario by Mylon
 --MIT Licensed
@@ -22,6 +18,13 @@ if MODULE_LIST then
 	module_list_add("dangOreus")
 end
 
+--
+-- some tweakable factors for the voronoi function
+--
+RING_SIZE = 200.0    -- width of rings
+WOBBLE_DEPTH = 40.0  -- depth to "blend" the rings to
+WOBBLE_FACTOR = 6.0  -- number of revolutions to use
+WOBBLE_SCALE = 0.7   -- how to scale the number of revolutions based on the ring number
 
 function clamp(min, max, v) 
     if v < min then return min end
@@ -121,8 +124,6 @@ function gOre(event)
     end
     global.ore_chunks[chunkx][chunky] = {type=chunk_type, biased=biased}
 
-    local  ore_list = global.ORE_LIST;
-
     local function transferFunc(f) 
         f = math.tanh(2 * XFER_FACTOR * f * (1.0 + 0.08943 * f * f * XFER_FACTOR * XFER_FACTOR) / math.sqrt(3.14159))
         f = (5000.0 + 5000.0 * f) / 10000.0
@@ -136,52 +137,33 @@ function gOre(event)
             if event.surface.get_tile(x,y).collides_with("ground-tile") and event.surface.count_entities_filtered{type="cliff", area=bbox} == 0 then
                 local amount = (x^2 + y^2)^ORE_SCALING / LINEAR_SCALAR
                 if x^2 + y^2 >= global.STARTING_RADIUS^2 then
-                    --Build the ore list.  Uranium can only appear in uranium chunks.
-                    --local ore_list = {}
-                    -- for k, v in pairs(global.easy_ore_list) do
-                    --     table.insert(ore_list, v)
-                    -- end
-                    -- if not (chunk_type == "random") then
-                    --     --Build the ore list.  non-baised chunks get 3 instances, biased chunks get 6.  Except uranium, which has no default instance in the table.
-                    --     table.insert(ore_list, chunk_type)
-                    --     --table.insert(ore_list, chunk_type)
-                    --     if biased then
-                    --         table.insert(ore_list, chunk_type)
-                    --         table.insert(ore_list, chunk_type)
-                    --         --table.insert(ore_list, chunk_type)
-                    --     end
-                    --     --game.print(serpent.line(ore_list))
-                    -- end
 
                     local type
                     if global.DANGORE_MODE == "random" then
-                        type = ore_list[math.random(#ore_list)]
-                    elseif global.DANGORE_MODE == "perlin" then
-                        --With noise
-                        --Using Perlin noise.
-                        --Using Fixed threshholds
-                        -- local noise = perlin.noise(x,y)
-                        -- if noise > 0.04 then
-                        --     type = "iron-ore"
-                        -- elseif noise > -0.18 then
-                        --     type = "copper-ore"
-                        -- elseif noise > -0.30 then
-                        --     type = "stone"
-                        -- elseif noise > -0.6 then
-                        --     type = "coal"
-                        -- else
-                        --     type = "uranium-ore"
-                        -- end
-
-                        local noise
-                        if global.DANGORE_MODE == 3 then
-                            noise = voronoi(x, y)                            
-                            type = ore_list[clamp(1, #ore_list, math.floor(#ore_list * (noise / 2 + 0.5)) + 1)]
-                        else
-                            noise = perlin.noise(x,y)
-                            noise = transferFunc(noise)
-                            type = ore_list[clamp(1, #ore_list, math.floor(#ore_list * (noise / 2 + 0.5)) + 1)]
+                        --Build the ore list.  Uranium can only appear in uranium chunks.
+                        local ore_list = {}
+                        for k, v in pairs(global.easy_ore_list) do
+                            table.insert(ore_list, v)
                         end
+                        if not (chunk_type == "random") then
+                            --Build the ore list.  non-baised chunks get 3 instances, biased chunks get 6.  Except uranium, which has no default instance in the table.
+                            table.insert(ore_list, chunk_type)
+                            --table.insert(ore_list, chunk_type)
+                            if biased then
+                                table.insert(ore_list, chunk_type)
+                                table.insert(ore_list, chunk_type)
+                                --table.insert(ore_list, chunk_type)
+                            end
+                            --game.print(serpent.line(ore_list))
+                        end
+                        type = ore_list[math.random(#ore_list)]
+                    elseif global.DANGORE_MODE == "voronoi" then
+                        local noise = voronoi(x, y)                            
+                        type = ore_list[clamp(1, #ore_list, math.floor(#ore_list * (noise / 2 + 0.5)) + 1)]
+                    elseif global.DANGORE_MODE == "perlin" then
+                        local noise = perlin.noise(x,y)
+                        noise = transferFunc(noise)
+                        type = ore_list[clamp(1, #ore_list, math.floor(#ore_list * (noise / 2 + 0.5)) + 1)]
                         if not type then
                             local _
                             _, type = next(global.perlin_ore_list)
@@ -225,17 +207,8 @@ function gOre(event)
 				p.destroy()
 			end
 		end
-	end
+    end 
 end
-
-
---
--- some tweakable factors for the voronoi function
---
-RING_SIZE = 200.0    -- width of rings
-WOBBLE_DEPTH = 40.0  -- depth to "blend" the rings to
-WOBBLE_FACTOR = 6.0  -- number of revolutions to use
-WOBBLE_SCALE = 0.7   -- how to scale the number of revolutions based on the ring number
 
 function voronoi(x, y) 
     local function dot(vx, vy, ux, uy) 
@@ -542,7 +515,6 @@ function divOresity_init()
         end
     end
 
-<<<<<<< HEAD
     --Debug
     --log(serpent.block(ore_ranking_raw))
 
@@ -604,7 +576,9 @@ function divOresity_init()
                 --end
                 previous_iter = n
             end
-=======
+        end
+    end
+
     --
     -- Generate a lookup table of 1000 slots, distributed correctly so
     -- they respect the ratios of ore the autoplacer wants to place
@@ -618,30 +592,23 @@ function divOresity_init()
         if f > current.amount then
             j = j + 1
             f = f - current.amount
->>>>>>> pr/9
         end
         f = f + ore_total / 1000.0
     end
 
     global.ORE_LIST = ore_list
 
-<<<<<<< HEAD
-        -- perlin_ore_list[math.abs(k)^0.5 * sign] = v
-        -- perlin_ore_list[k] = v
+    -- perlin_ore_list[math.abs(k)^0.5 * sign] = v
+    -- perlin_ore_list[k] = v
 
-        --Pie mode
-        --We already have the ore_ranking so let's copy it to our global table.
-        global.pie = {rotation = math.random() * 2 * math.pi, ores = {}}
+    --Pie mode
+    --We already have the ore_ranking so let's copy it to our global table.
+    global.pie = {rotation = math.random() * 2 * math.pi, ores = {}}
 
-        for _, ore in pairs(ore_ranking) do
-            table.insert(global.pie.ores, ore)
-        end
-        --log(serpent.block(global.pie.ores))
-
-
+    for _, ore in pairs(ore_ranking) do
+        table.insert(global.pie.ores, ore)
     end
-=======
->>>>>>> pr/9
+    --log(serpent.block(global.pie.ores))
 
     -- For debugging
     --log(serpent.block(perlin_ore_list))
