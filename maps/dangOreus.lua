@@ -175,6 +175,18 @@ function gOre(event)
                         end
                         --Default case.  Shouldn't need this!
                         type = type or global.pie.ores[1][1]
+                    elseif global.DANGORE_MODE == "spiral" then
+                        --We need a number from 0 to 1
+                        local rad = (math.atan2(y, x) + global.pie.rotation + (x^2 + y^2)^0.5 / 100) % (math.pi * 2) / (math.pi * 2)
+                        --log(rad)
+                        for _, ore in pairs(global.pie.ores) do
+                            if rad < ore[2] then
+                                type = ore[1]
+                                break
+                            end
+                        end
+                        --Default case.  Shouldn't need this!
+                        type = type or global.pie.ores[1][1]
                     end
                     event.surface.create_entity{name=type, amount=amount, position={x, y}, enable_tree_removal=false, enable_cliff_removal=false}
                 end
