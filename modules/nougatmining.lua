@@ -7,10 +7,10 @@ if MODULE_LIST then
 end
 
 nougat = {}
-nougat.LOGISTIC_RADIUS = true --Use the logistic radius, else use construction radius.
+--nougat.LOGISTIC_RADIUS = true --Use the logistic radius, else use construction radius.
 nougat.TARGET_RATIO = 0.10 --Aim to keep this proportion of construction bots free.
 nougat.DEFAULT_RATIO = 0.5 --The ratio of choclate to chew.  Err, I mean how many bots we assign to mining.  Starts here, changes later based on bot availability.
-nougat.MAX_ITEMS = 800 --Spawning more than this gets really laggy.
+nougat.MAX_ITEMS = 400 --Spawning more than this gets really laggy.
 nougat.USE_CARGO_COUNT = false --Turning this on is ridiculously OP.
 global.nougat = {roboports = {}, index=1, easy_ores={}, networks={}, optout={}} --Networks is of format {network=network, ratio=ratio}
 
@@ -73,9 +73,9 @@ function nougat.register(event)
 end
 
 function nougat.chewy(event, assigned)
-    if not (game.tick % 60 == 31) then
-        return
-    end
+    -- if not (game.tick % 60 == 31) then
+        -- return
+    -- end
     if (#global.nougat.roboports == 0) then
         return
     end
@@ -130,25 +130,29 @@ function nougat.chewy(event, assigned)
         end
         --game.print("Removing roboport.  No ore found.")
     end
-    assigned = assigned or 0 --In case this is the first time we're calling it.
+    if not assigned then assigned = 0 end
     local count = nougat.oompa_loompa(roboport.logistic_cell.logistic_network) - assigned
     if count < 30 then
         --We shouldn't bother. Need to advance index in case this is an isolated roboport.
         global.nougat.index = global.nougat.index + 1
         return
     end
-
-    local force = roboport.force
+	
+	local force = roboport.force
+	
+	--Modify force construction limit since this mod can easily spam more than enough requests!
+    --This is on a per tick basis, and we check every 60 ticks.
     if force.max_successful_attemps_per_tick_per_construction_queue * 60 < count then
         force.max_successful_attemps_per_tick_per_construction_queue = math.floor(count / 60)
     end
 
+	
     --Finally, let's do some mining.
     --game.print("Time to mine.")
     local ore = ores[math.random(1,#ores)]
     local position = ore.position --Just in case we kill the ore.
     local surface = roboport.surface
-    local productivity = force.mining_drill_productivity_bonus
+    local productivity = force.mining_drill_productivity_bonus + 1
     local cargo_multiplier = 1
     if nougat.USE_CARGO_COUNT then
         cargo_multiplier = force.worker_robots_storage_bonus + 1
@@ -156,7 +160,7 @@ function nougat.chewy(event, assigned)
     local products = {}
     
     count = math.min(math.ceil(ore.amount / cargo_multiplier), nougat.MAX_ITEMS, count)
-    
+	
     for k,v in pairs(ore.prototype.mineable_properties.products) do
 		local product
         if v.type == "item" then --If fluid, not sure what to do here.    
@@ -180,7 +184,7 @@ function nougat.chewy(event, assigned)
 			table.insert(products, {name=product.name, count=product.count})
         end 
     end
-
+	
     for i = 1, count do
         for k, v in pairs(products) do
             local oreitem = surface.create_entity{name="item-on-ground", stack=v, position=position}
@@ -211,9 +215,7 @@ function nougat.chewy(event, assigned)
         end
         --Let's go again.
         global.nougat.index = global.nougat.index + 1
-        if count+assigned < nougat.MAX_ITEMS then
-            return nougat.chewy(event, count+assigned)
-        end
+        return nougat.chewy(event, count+assigned)
     end
 
     --Finally let's advance the index.
@@ -224,7 +226,7 @@ end
 function nougat.how_many_licks(entity)
     local radius
     if entity and entity.valid and entity.logistic_cell then
-        if nougat.LOGISTIC_RADIUS then
+        if not settings.global["use construction range"].value then
             radius = entity.logistic_cell.logistic_radius
         else
             radius = entity.logistic_cell.construction_radius
@@ -250,23 +252,14 @@ function nougat.oompa_loompa(network)
         end
     end
     if not data then --Register network.
-        data = {network=network, ratio=nougat.DEFAULT_RATIO, jobs_created_last_tick = 0}
+        data = {network=network, ratio=nougat.DEFAULT_RATIO}
         table.insert(global.nougat.networks, data)
     end
     if network.available_construction_robots / network.all_construction_robots > nougat.TARGET_RATIO then
-        data.ratio = math.min(data.ratio + 0.01, 1)
+        data.ratio = math.min(data.ratio + 0.01, 2)
     else
         data.ratio = math.max(data.ratio - 0.01, 0.01)
     end
-
-    local count = math.floor(network.available_construction_robots * data.ratio)
-    if network.available_construction_robots > network.all_construction_robots - data.jobs_created_last_tick then --Scale back.  Jobs aren't being assigned fast enough
-        count = 0
-        data.jobs_created_last_tick = data.jobs_created_last_tick * 0.9
-    else
-        data.jobs_created_last_tick = count
-    end
-    
     return math.floor(network.available_construction_robots * data.ratio)
 end
 
@@ -286,14 +279,24 @@ commands.add_command("nougat", "Toggle nougat mining", function()
     end
 end)
 
---Temporary fix.  Shouldn't be necessary in a running game, but if there's a lot of existing jobs created...
-if rpg then
-    Event.register(rpg.on_reset_technology_effects, function(event)
-        event.force.max_successful_attemps_per_tick_per_construction_queue = 50
-        event.force.max_failed_attempts_per_tick_per_construction_queue = 5
-    end)
-end
-Event.register(-1, nougat.bake)
-Event.register(defines.events.on_tick, nougat.chewy)
-Event.register(defines.events.on_robot_built_entity, nougat.register)
-Event.register(defines.events.on_built_entity, nougat.register)
+script.on_nth_tick(60, nougat.chewy)
+script.on_init(function(event) nougat.bake() end)
+script.on_event(defines.events.on_robot_built_entity, function(event) nougat.register(event) end)
+script.on_event(defines.events.on_built_entity, function(event) nougat.register(event) end)
+script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
+	if event.setting == "use construction range" then
+		global.nougat = {roboports = {}, index=1, easy_ores={}, networks={}, optout={}}
+		global.nougat.pollution = 9 * 0.9
+		for _, surface in pairs(game.surfaces) do
+			for __, roboport in pairs(surface.find_entities_filtered{type="roboport"}) do
+				nougat.register({created_entity=roboport})
+			end
+		end
+	end
+end)
+
+
+--Event.register(-1, nougat.bake)
+-- Event.register(defines.events.on_tick, nougat.chewy)
+-- Event.register(defines.events.on_robot_built_entity, nougat.register)
+-- Event.register(defines.events.on_built_entity, nougat.register)

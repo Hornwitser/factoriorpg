@@ -1,12 +1,16 @@
+--When loading a save, these will be overwritten by what the save was generated with.
+global.STARTING_RADIUS = settings.global["starting radius"].value
+global.EASY_ORE_RADIUS = settings.global["simple ore radius"].value
+global.DANGORE_MODE = settings.global["dangore mode"].value
+
 --dangOreus, a scenario by Mylon
 --MIT Licensed
 
-require "utils/perlin" --Perlin Noise.
+require "perlin" --Perlin Noise.
 
-STARTING_RADIUS = 80
-EASY_ORE_RADIUS = 200
 ORE_SCALING = 0.78 --Exponent for ore amount.
-DANGORE_MODE = 2 -- 1 == Random, 2 == Perlin
+LINEAR_SCALAR = 12 -- For ore amount.
+--DANGORE_MODE = 2 -- 1 == Random, 2 == Perlin
 
 if MODULE_LIST then
 	module_list_add("dangOreus")
@@ -14,6 +18,9 @@ end
 
 --Sprinkle ore everywhere
 function gOre(event)
+    --Ensure we've done our init
+    if not global.perlin_ore_list then divOresity_init() end
+
     local oldores = event.surface.find_entities_filtered{type="resource", area=event.area}
     local oils = {}
     for k, v in pairs(oldores) do
@@ -97,136 +104,12 @@ function gOre(event)
     end
     global.ore_chunks[chunkx][chunky] = {type=chunk_type, biased=biased}
 
-    --For perlin noise auto-mode
-    local perlin_ore_list = {}
-    local ore_ranking_raw = {}
-    local ore_ranking = {}
-    local ore_total = 0
-    
-    for k,v in pairs(global.diverse_ore_list) do
-        local autoplace = event.surface.map_gen_settings.autoplace_controls[v]
-        if autoplace then
-            local adding = 0
-            if autoplace.frequency == "very-low" then
-                adding = 1
-            elseif autoplace.frequency == "low" then
-                adding = 2
-            elseif autoplace.frequency == "normal" then
-                adding = 3
-            elseif autoplace.frequency == "high" then
-                adding = 4
-            elseif autoplace.frequency == "very-high" then
-                adding = 5
-            end
-            if adding > 0 then
-                local amount = adding * game.entity_prototypes[v].autoplace_specification.coverage
-                if game.entity_prototypes[v].mineable_properties.required_fluid then
-                    table.insert(ore_ranking_raw, 1, {name=v, amount=amount})
-                else
-                    table.insert(ore_ranking_raw, {name=v, amount=amount})
-                end
-                ore_total = ore_total + amount
-            end
-        end
-    end
-
-    --Debug
-    --log(serpent.block(ore_ranking_raw))
-
-    --Calculate ore distribution from 0 to 1.
-    local last_key = 0
-    local ore_ranking_size = 0 --Essentially #ore_ranking_raw
-    for k,v in pairs(ore_ranking_raw) do
-        local key = last_key + v.amount / ore_total
-        last_key = key
-
-        if key == 1 then key = 0.9999999 end
-        --ore_ranking[key] = v.name
-        table.insert(ore_ranking, {v.name, key})
-        --ore_ranking_size = ore_ranking_size + 1
-        --Debug
-        --log("Ore: " .. v.name .. " portion: " .. key)
-        --According to this, at this stage, uranium should be 2% of all ore.
-    end
-
-    --This next bit requires a lerp
-    --Returns x3
-    local function lerp(x1, x2, dy, y3)
-        return y3 * (x2-x1)/dy + x1
-    end
-
-    --Now do a pass to scale these numbers according to perlin.MEASURED distribution
-    local last_ranking_key = 0
-    last_key = -1
-    local previous_iter = -1
-    local count = 0
-    for k,v in pairs(ore_ranking) do
-        --local range = k - last_ranking_key -- This is the percentage that should appear of this ore type
-        local range = v[2] - last_ranking_key -- This is the percentage that should appear of this ore type
-        last_ranking_key = v[2]
-        local measured_sum = 0 -- This is the range that our perlin steps cover, from last_key to n
-        --log("For ore " .. v[1] .. " using range " .. range)
-        -- count = count + 1 -- This is so we do something special on the last one.  Rounding errors may cause the last ore to not be inserted otherwise.
-        --local perlin_key
-        --The last ore will never get used.  Let's determine if we're at the end of the table and write the last key there.
-        for n, p in pairs(perlin.MEASURED) do
-            --Skip keys we've already iterated over
-            if n > last_key then
-                measured_sum = measured_sum + p
-                --If I were to get fancy, I could add a LERP here for finer control of perlin_ore_list keys.
-                --if count < ore_ranking_size then            
-                    if measured_sum > range then
-                        --log("measured sum is " .. measured_sum .. " and key range is " .. n - last_key)
-                        local x3 = lerp(previous_iter, n, p, range - (measured_sum - p) )
-                        table.insert(perlin_ore_list, {v[1], x3})
-                        --perlin_ore_list[n] = name
-                        last_key = n
-                        previous_iter = n
-                        break
-                    end
-                --else
-                --    perlin_ore_list[0.9999999] = v
-                    --game.print(0.88 - n .. "," .. range) --Debug.
-                    --break
-                --end
-                previous_iter = n
-            end
-        end
-
-        --Are we still here?  Insert at the last key.
-        if not perlin_ore_list[k] then
-            table.insert(perlin_ore_list, {v[1], 1})
-        end
-        
-        --perlin_ore_list[0.9999999] = v
-
-        -- perlin_ore_list[math.abs(k)^0.5 * sign] = v
-        -- perlin_ore_list[k] = v
-    end
-
-    -- For debugging
-    --log(serpent.block(perlin_ore_list))
-    -- global.a = perlin_ore_list
-    -- game.print(serpent.line(ore_list))
-    --game.print(serpent.line(ore_ranking))
-    -- Test perlin/measured.  Should return 1.
-    -- local sum = 0
-    -- for k,v in pairs(perlin.MEASURED) do
-    --     sum = sum + v
-    -- end
-    -- game.print(sum)
-    -- Tested, returns 1.0000001.  Close enough.
-    --Count the number of generated entities to meausre the ratio.
-    --/c game.print(game.player.surface.count_entities_filtered{name="iron-ore"}/game.player.surface.count_entities_filtered{name="copper-ore"})
-    --prototype coverage ratio
-    --/c game.print(game.entity_prototypes["copper-ore"].autoplace_specification.coverage/game.entity_prototypes["zinc-ore"].autoplace_specification.coverage)
-
     for x = event.area.left_top.x, event.area.left_top.x + 31 do
         for y = event.area.left_top.y, event.area.left_top.y + 31 do
             local bbox = {{ x, y}, {x+0.5, y+0.5}}
             if event.surface.get_tile(x,y).collides_with("ground-tile") and event.surface.count_entities_filtered{type="cliff", area=bbox} == 0 then
-                local amount = (x^2 + y^2)^ORE_SCALING / 8
-                if x^2 + y^2 >= STARTING_RADIUS^2 then
+                local amount = (x^2 + y^2)^ORE_SCALING / LINEAR_SCALAR
+                if x^2 + y^2 >= global.STARTING_RADIUS^2 then
                     --Build the ore list.  Uranium can only appear in uranium chunks.
                     local ore_list = {}
                     for k, v in pairs(global.easy_ore_list) do
@@ -245,7 +128,7 @@ function gOre(event)
                     end
 
                     local type
-                    if DANGORE_MODE == 1 then
+                    if global.DANGORE_MODE == 1 then
                         type = ore_list[math.random(#ore_list)]
                     else
                         --With noise
@@ -266,26 +149,15 @@ function gOre(event)
 
                         --Using auto threshholds
                         local noise = perlin.noise(x,y)
-                        -- local upper_limit = 1
-                        -- for k,v in pairs(perlin_ore_list) do
-                        --     if noise < k and noise < upper_limit then
-                        --         type = v
-                        --         upper_limit = k
-                        --     end
-                        -- end
-                        type = perlin_ore_list[1][1]
-                        for k,v in pairs(perlin_ore_list) do
+                        for k,v in pairs(global.perlin_ore_list) do
                             if noise < v[2] then
                                 type = v[1]
                                 break
                             end
                         end
-                        --log(noise .. " , " .. upper_limit)
                         if not type then
-                            --Fallback!  This shouldn't happen.
-                            log("Warning: Using fallback.")
                             local _
-                            _, type = next(perlin_ore_list)[1]
+                            _, type = next(global.perlin_ore_list)
                         end
                     end
 
@@ -318,7 +190,7 @@ function dangOre(event)
     if event.created_entity.bounding_box.left_top.x == event.created_entity.bounding_box.right_bottom.x or event.created_entity.bounding_box.left_top.y == event.created_entity.bounding_box.right_bottom.y then
         return
     end
-    if false then --Dificulty setting
+    if settings.global["easy mode"].value then --Dificulty setting
 		if event.created_entity.type == "transport-belt" or
 		event.created_entity.type == "underground-belt" or
 		event.created_entity.type == "splitter" or
@@ -393,7 +265,7 @@ function flOre_is_lava(event)
         if not p.character then --Spectator or admin
             return
         end
-        if math.abs(p.position.x) > EASY_ORE_RADIUS or math.abs(p.position.y) > EASY_ORE_RADIUS then
+        if math.abs(p.position.x) > global.EASY_ORE_RADIUS or math.abs(p.position.y) > global.EASY_ORE_RADIUS then
             --Check for nearby ore.
             local count = p.surface.count_entities_filtered{type="resource", area={{p.position.x-10, p.position.y-10}, {p.position.x+10, p.position.y+10}}}
             if count > 350 then
@@ -417,12 +289,14 @@ function divOresity_init()
 
     global.ore_chunks = {}
 
+    global.perlin_ore_list = {}
+
     --These are depreciated.
     -- global.easy_ores = {}
     -- global.diverse_ores = {}
 
 	for k,v in pairs(game.entity_prototypes) do
-        if v.type == "resource" and v.resource_category == "basic-solid" then--[ and not (game.surfaces[1].map_gen_settings.autoplace_controls[v.name].size == "none") then
+        if v.type == "resource" and v.resource_category == "basic-solid" and v.autoplace_specification then
             table.insert(global.diverse_ore_list, v.name)
             if v.mineable_properties.required_fluid == nil then
 			    table.insert(global.easy_ore_list, v.name)
@@ -498,12 +372,138 @@ function divOresity_init()
     --     table.insert(global.diverse_ores, random)
     -- end
 
+    --Perlin Ore list generation
+    local ore_ranking_raw = {}
+    local ore_ranking = {}
+    local ore_total = 0
+    
+    for k,v in pairs(global.diverse_ore_list) do
+        local autoplace = game.surfaces[1].map_gen_settings.autoplace_controls[v]
+        if autoplace then
+            local adding = 0
+            if autoplace.frequency == "very-low" then
+                adding = 1
+            elseif autoplace.frequency == "low" then
+                adding = 2
+            elseif autoplace.frequency == "normal" then
+                adding = 3
+            elseif autoplace.frequency == "high" then
+                adding = 4
+            elseif autoplace.frequency == "very-high" then
+                adding = 5
+            end
+            if adding > 0 then
+                local amount = adding * game.entity_prototypes[v].autoplace_specification.coverage
+                if game.entity_prototypes[v].mineable_properties.required_fluid then
+                    table.insert(ore_ranking_raw, 1, {name=v, amount=amount})
+                else
+                    table.insert(ore_ranking_raw, {name=v, amount=amount})
+                end
+                ore_total = ore_total + amount
+            end
+        end
+    end
+
+    --Debug
+    --log(serpent.block(ore_ranking_raw))
+
+    --Calculate ore distribution from 0 to 1.
+    local last_key = 0
+    local ore_ranking_size = 0 --Essentially #ore_ranking_raw
+    for k,v in pairs(ore_ranking_raw) do
+        local key = last_key + v.amount / ore_total
+        last_key = key
+
+        if key == 1 then key = 0.9999999 end
+        --ore_ranking[key] = v.name
+        table.insert(ore_ranking, {v.name, key})
+        --ore_ranking_size = ore_ranking_size + 1
+        --Debug
+        --log("Ore: " .. v.name .. " portion: " .. key)
+        --According to this, at this stage, uranium should be 2% of all ore.
+    end
+
+    --This next bit requires a lerp
+    --Returns x3
+    local function lerp(x1, x2, dy, y3)
+        return y3 * (x2-x1)/dy + x1
+    end
+
+    --Now do a pass to scale these numbers according to perlin.MEASURED distribution
+    local last_ranking_key = 0
+    last_key = -1
+    local previous_iter = -1
+    local count = 0
+    for k,v in pairs(ore_ranking) do
+        --local range = k - last_ranking_key -- This is the percentage that should appear of this ore type
+        local range = v[2] - last_ranking_key -- This is the percentage that should appear of this ore type
+        last_ranking_key = v[2]
+        local measured_sum = 0 -- This is the range that our perlin steps cover, from last_key to n
+        --log("For ore " .. v[1] .. " using range " .. range)
+        -- count = count + 1 -- This is so we do something special on the last one.  Rounding errors may cause the last ore to not be inserted otherwise.
+        --local perlin_key
+        --The last ore will never get used.  Let's determine if we're at the end of the table and write the last key there.
+        for n, p in pairs(perlin.MEASURED) do
+            --Skip keys we've already iterated over
+            if n > last_key then
+                measured_sum = measured_sum + p
+                --If I were to get fancy, I could add a LERP here for finer control of perlin_ore_list keys.
+                --if count < ore_ranking_size then            
+                    if measured_sum > range then
+                        --log("measured sum is " .. measured_sum .. " and key range is " .. n - last_key)
+                        local x3 = lerp(previous_iter, n, p, range - (measured_sum - p) )
+                        table.insert(global.perlin_ore_list, {v[1], x3})
+                        --perlin_ore_list[n] = name
+                        last_key = n
+                        previous_iter = n
+                        break
+                    end
+                --else
+                --    perlin_ore_list[0.9999999] = v
+                    --game.print(0.88 - n .. "," .. range) --Debug.
+                    --break
+                --end
+                previous_iter = n
+            end
+        end
+
+        --Are we still here?  Insert at the last key.
+        if not global.perlin_ore_list[k] then
+            table.insert(global.perlin_ore_list, {v[1], 1})
+        end
+        
+        --perlin_ore_list[0.9999999] = v
+
+        -- perlin_ore_list[math.abs(k)^0.5 * sign] = v
+        -- perlin_ore_list[k] = v
+    end
+
+    -- For debugging
+    --log(serpent.block(perlin_ore_list))
+    -- global.a = perlin_ore_list
+    -- game.print(serpent.line(ore_list))
+    --game.print(serpent.line(ore_ranking))
+    -- Test perlin/measured.  Should return 1.
+    -- local sum = 0
+    -- for k,v in pairs(perlin.MEASURED) do
+    --     sum = sum + v
+    -- end
+    -- game.print(sum)
+    -- Tested, returns 1.0000001.  Close enough.
+    --Count the number of generated entities to meausre the ratio.
+    --/c game.print(game.player.surface.count_entities_filtered{name="iron-ore"}/game.player.surface.count_entities_filtered{name="copper-ore"})
+    --prototype coverage ratio
+    --/c game.print(game.entity_prototypes["copper-ore"].autoplace_specification.coverage/game.entity_prototypes["zinc-ore"].autoplace_specification.coverage)
 end
 
-Event.register(defines.events.on_built_entity, dangOre)
-Event.register(defines.events.on_robot_built_entity, dangOre)
-Event.register(defines.events.on_chunk_generated, gOre)
-Event.register(defines.events.on_entity_died, ore_rly)
---Event.register(defines.events.on_tick, unchOret)
-Event.register(defines.events.on_tick, flOre_is_lava)
-Event.register(-1, divOresity_init)
+script.on_event(defines.events.on_built_entity, function(event) dangOre(event) end)
+script.on_event(defines.events.on_robot_built_entity, function(event) dangOre(event) end)
+script.on_event(defines.events.on_chunk_generated, function(event) gOre(event) end)
+script.on_event(defines.events.on_entity_died, function(event) ore_rly(event) end)
+--script.on_configuration_changed(divOresity_init())
+-- script.on_event(defines.events.on_tick, function(event)
+	-- unchOret(event)
+	-- -- flOre_is_lava(event) --Intended for multiplayer.
+-- end)
+--script.on_configuration_changed(function() perlin.shuffle() end)
+--script.on_init(function(event) divOresity_init() perlin.shuffle() end)

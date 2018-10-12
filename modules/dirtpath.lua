@@ -126,5 +126,15 @@ function dirt_handler(event)
 	end
 end
 
-Event.register(defines.events.on_player_changed_position, dirtDirt)
-Event.register(defines.events.on_tick, dirt_handler)
+--Since the migration failed:
+--Migration from 1.1.1
+script.on_configuration_changed(function()
+	if not global.flattening then
+		global.flattening = true
+		global.dirt = {}
+	end
+end)
+
+script.on_nth_tick(108000, cleanDirt) --30 minutes
+--script.on_nth_tick(300, function() game.write_file("dirtdump", serpent.block(global.dirt)) end)
+script.on_event(defines.events.on_player_changed_position, function(event) dirtDirt(event) end)
