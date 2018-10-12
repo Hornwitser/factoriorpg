@@ -40,8 +40,9 @@ require "modules/votekick" --Allows users to kick other users.
 --require "modules/lazybastard" --Much slower crafting speed
 require "modules/playerlist" --List of online players
 require "modules/rainbow" --Top of the line graphics!
-require "modules/regional" --For some silliness.
+require "modules/regional" --Regional Crafting, goods must be produced near matching region markers
 --require "rpg_pocket_crafter" --Pocket crafting!
+require "modules/nyan" --More silliness.
 
 -- World Generators: Most are exclusive.
 --require "maps/prospector" --Radars generate ore
