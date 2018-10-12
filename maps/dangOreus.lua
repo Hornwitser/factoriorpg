@@ -158,7 +158,8 @@ function gOre(event)
                         end
                         type = ore_list[math.random(#ore_list)]
                     elseif global.DANGORE_MODE == "voronoi" then
-                        local noise = voronoi(x, y)                            
+                        local noise = voronoi(x, y)
+                        local ore_list = global.ORE_LIST
                         type = ore_list[clamp(1, #ore_list, math.floor(#ore_list * (noise / 2 + 0.5)) + 1)]
                     elseif global.DANGORE_MODE == "perlin" then
                         local noise = perlin.noise(x,y)
