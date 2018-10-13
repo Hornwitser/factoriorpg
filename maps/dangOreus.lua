@@ -7,7 +7,7 @@ STARTING_RADIUS = 80
 EASY_ORE_RADIUS = 120
 ORE_SCALING = 0.78 --Exponent for ore amount.
 LINEAR_SCALAR = 8 -- For ore amount.
-DANGORE_MODE = 3 -- 1 == Random, 2 == Perlin, 3 == Pie
+DANGORE_MODE = "voronoi" -- random, pie, voronoi, spiral, or perlin
 
 if MODULE_LIST then
 	module_list_add("dangOreus")
