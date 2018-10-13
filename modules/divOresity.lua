@@ -12,7 +12,10 @@ global.STONE_BYPRODUCT_RATIO = settings.global["stone byproduct ratio"].value
 function divOresity_init()
 	global.diverse_ores = {}
 	for k,v in pairs(game.entity_prototypes) do
-		if v.type == "resource" and v.resource_category == "basic-solid" and v.mineable_properties.required_fluid == nil then
+		if v.type == "resource"
+		and v.resource_category == "basic-solid"
+		and v.mineable_properties.required_fluid == nil
+		and v.autoplace_specification then
 			table.insert(global.diverse_ores, v.name)
 		end
 	end
