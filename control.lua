@@ -47,8 +47,8 @@ require "modules/nyan" --More silliness.
 -- World Generators: Most are exclusive.
 --require "maps/prospector" --Radars generate ore
 --require "maps/TTSFN" --This Tank Stops for Nobody!
---require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
-require "modules/divOresity" --Some ore gets scrambled and must be filtered. Must be called after dangOreus if using perlin mode.
+require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
+--require "modules/divOresity" --Some ore gets scrambled and must be filtered. Must be called after dangOreus if using perlin mode.
 --require "maps/searious" --Everything not a resource tile is turned into water.
 --require "oarc_events" --Oarc's separate spawn scenario.
 --require "maps/heximaze" --A labyrinth.
