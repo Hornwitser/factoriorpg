@@ -1,17 +1,18 @@
 --When loading a save, these will be overwritten by what the save was generated with.
-STARTING_RADIUS = 80
-EASY_ORE_RADIUS = 120
-V_SCALE_FACTOR = 3.0
-DANGORE_MODE = "voronoi" -- random, pie, spiral, voronoi, or perlin
+global.STARTING_RADIUS = settings.global["starting radius"].value
+global.EASY_ORE_RADIUS = settings.global["simple ore radius"].value
+global.DANGORE_MODE = settings.global["dangOre mode"].value
+global.V_SCALE_FACTOR = settings.global["voronoi scale factor"].value
 
 --dangOreus, a scenario by Mylon
 --MIT Licensed
 
-require "utils/perlin" --Perlin Noise.
+require "perlin" --Perlin Noise.
 
 ORE_SCALING = 0.78 --Exponent for ore amount.
-LINEAR_SCALAR = 8 -- For ore amount.
+LINEAR_SCALAR = 12 -- For ore amount.
 XFER_FACTOR = 3.0 -- ERF() factor, for non-uniform perlin transfer
+--DANGORE_MODE = 2 -- 1 == Random, 2 == Perlin
 
 if MODULE_LIST then
 	module_list_add("dangOreus")
@@ -104,7 +105,7 @@ function gOre(event)
         --If type is random, chance chunk type is different.
         if chunk_type == "random" then
             if math.random() < 0.25 then
-                if math.max(math.abs(chunkx), math.abs(chunkx+32))^2 + math.max(math.abs(chunky), math.abs(chunky+32))^2 > EASY_ORE_RADIUS^2 then
+                if math.max(math.abs(chunkx), math.abs(chunkx+32))^2 + math.max(math.abs(chunky), math.abs(chunky+32))^2 > global.EASY_ORE_RADIUS^2 then
                     chunk_type = global.diverse_ore_list[math.random(#global.diverse_ore_list)]
                 else
                     chunk_type = global.easy_ore_list[math.random(#global.diverse_ore_list)]
@@ -135,10 +136,10 @@ function gOre(event)
             local bbox = {{ x, y}, {x+0.5, y+0.5}}
             if event.surface.get_tile(x,y).collides_with("ground-tile") and event.surface.count_entities_filtered{type="cliff", area=bbox} == 0 then
                 local amount = (x^2 + y^2)^ORE_SCALING / LINEAR_SCALAR
-                if x^2 + y^2 >= STARTING_RADIUS^2 then
+                if x^2 + y^2 >= global.STARTING_RADIUS^2 then
 
                     local type
-                    if DANGORE_MODE == "random" then
+                    if global.DANGORE_MODE == "random" then
                         --Build the ore list.  Uranium can only appear in uranium chunks.
                         local ore_list = {}
                         for k, v in pairs(global.easy_ore_list) do
@@ -156,11 +157,11 @@ function gOre(event)
                             --game.print(serpent.line(ore_list))
                         end
                         type = ore_list[math.random(#ore_list)]
-                    elseif DANGORE_MODE == "voronoi" then
+                    elseif global.DANGORE_MODE == "voronoi" then
                         local noise = voronoi(x, y)
                         local ore_list = global.ORE_LIST
                         type = ore_list[clamp(1, #ore_list, math.floor(#ore_list * (noise / 2 + 0.5)) + 1)]
-                    elseif DANGORE_MODE == "perlin" then
+                    elseif global.DANGORE_MODE == "perlin" then
                         local noise = perlin.noise(x,y)
                         local ore_list = global.ORE_LIST
                         noise = transferFunc(noise)
@@ -169,7 +170,7 @@ function gOre(event)
                             local _
                             _, type = next(global.perlin_ore_list)
                         end
-                    elseif DANGORE_MODE == "pie" then
+                    elseif global.DANGORE_MODE == "pie" then
                         --We need a number from 0 to 1
                         local rad = (math.atan2(y, x) + global.pie.rotation) % (math.pi * 2) / (math.pi * 2)
                         --log(rad)
@@ -181,7 +182,7 @@ function gOre(event)
                         end
                         --Default case.  Shouldn't need this!
                         type = type or global.pie.ores[1][1]
-                    elseif DANGORE_MODE == "spiral" then
+                    elseif global.DANGORE_MODE == "spiral" then
                         --We need a number from 0 to 1
                         local rad = (math.atan2(y, x) + global.pie.rotation + (x^2 + y^2)^0.5 / 100) % (math.pi * 2) / (math.pi * 2)
                         --log(rad)
@@ -233,7 +234,7 @@ function voronoi(x, y)
     --
     -- transform input coordinate, and determine a scale factor
     --
-    local scaleFactor = V_SCALE_FACTOR
+    local scaleFactor = global.V_SCALE_FACTOR
     local ring = math.floor(math.sqrt(x * x + y * y) / RING_SIZE)
     local ang = math.atan2(x, y)
     local gx = x + math.sin(ang * WOBBLE_FACTOR * (1 + ring * WOBBLE_SCALE)) * WOBBLE_DEPTH -- perturb coords used for actual ring determination
@@ -362,7 +363,7 @@ function flOre_is_lava(event)
         if not p.character then --Spectator or admin
             return
         end
-        if math.abs(p.position.x) > EASY_ORE_RADIUS or math.abs(p.position.y) > EASY_ORE_RADIUS then
+        if math.abs(p.position.x) > global.EASY_ORE_RADIUS or math.abs(p.position.y) > global.EASY_ORE_RADIUS then
             --Check for nearby ore.
             if not global.flOre then global.flOre = {} end
             local distance = global.flOre[p.name] or 1
@@ -629,7 +630,14 @@ function divOresity_init()
     --/c game.print(game.entity_prototypes["copper-ore"].autoplace_specification.coverage/game.entity_prototypes["zinc-ore"].autoplace_specification.coverage)
 end
 
-Event.register(defines.events.on_built_entity, dangOre)
-Event.register(defines.events.on_robot_built_entity, dangOre)
-Event.register(defines.events.on_chunk_generated, gOre)
-Event.register(defines.events.on_entity_died, ore_rly)
+script.on_event(defines.events.on_built_entity, function(event) dangOre(event) end)
+script.on_event(defines.events.on_robot_built_entity, function(event) dangOre(event) end)
+script.on_event(defines.events.on_chunk_generated, function(event) gOre(event) end)
+script.on_event(defines.events.on_entity_died, function(event) ore_rly(event) end)
+--script.on_configuration_changed(divOresity_init())
+-- script.on_event(defines.events.on_tick, function(event)
+	-- unchOret(event)
+	-- -- flOre_is_lava(event) --Intended for multiplayer.
+-- end)
+--script.on_configuration_changed(function() perlin.shuffle() end)
+--script.on_init(function(event) divOresity_init() perlin.shuffle() end)
