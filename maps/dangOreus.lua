@@ -12,11 +12,6 @@ require "perlin" --Perlin Noise.
 ORE_SCALING = 0.78 --Exponent for ore amount.
 LINEAR_SCALAR = 12 -- For ore amount.
 XFER_FACTOR = 3.0 -- ERF() factor, for non-uniform perlin transfer
---DANGORE_MODE = 2 -- 1 == Random, 2 == Perlin
-
-if MODULE_LIST then
-	module_list_add("dangOreus")
-end
 
 --
 -- some tweakable factors for the voronoi function
@@ -36,6 +31,7 @@ end
 function gOre(event)
     --Ensure we've done our init
     if not global.perlin_ore_list then divOresity_init() end
+    --log(serpent.line(global.perlin_ore_list))
 
     local oldores = event.surface.find_entities_filtered{type="resource", area=event.area}
     local oils = {}
@@ -355,10 +351,8 @@ end
 -- end
 
 --Limit exploring
-function flOre_is_lava(event)
-    if not (event.tick % (300) == 31) then
-        return
-    end
+function flOre_is_lava()
+    if not settings.global["floor is lava"].value then return end
     for n, p in pairs(game.connected_players) do
         if not p.character then --Spectator or admin
             return
@@ -389,6 +383,10 @@ end
 
 --Build the list of ores
 function divOresity_init()
+    -- Migration for pre-1.5.0 saves
+    if global.DANGORE_MODE == 1 then global.DANGORE_MODE = "random" end
+    if global.DANGORE_MODE == 2 then global.DANGORE_MODE = "perlin" end
+
     --Each chunk picks a table to generate from.  Each table has either 3 copies of one ore, or 6 copies.
     global.easy_ore_list = {}
 	global.diverse_ore_list = {}
@@ -492,9 +490,11 @@ function divOresity_init()
     
     for k,v in pairs(global.diverse_ore_list) do
         local autoplace = game.surfaces[1].map_gen_settings.autoplace_controls[v]
+        local adding
         if autoplace then
-            local adding = 0
-            if autoplace.frequency == "very-low" then
+            if autoplace.frequency == "none" then
+                adding = 0
+            elseif autoplace.frequency == "very-low" then
                 adding = 1
             elseif autoplace.frequency == "low" then
                 adding = 2
@@ -505,15 +505,16 @@ function divOresity_init()
             elseif autoplace.frequency == "very-high" then
                 adding = 5
             end
-            if adding > 0 then
-                local amount = adding * game.entity_prototypes[v].autoplace_specification.coverage
-                if game.entity_prototypes[v].mineable_properties.required_fluid then
-                    table.insert(ore_ranking_raw, 1, {name=v, amount=amount})
-                else
-                    table.insert(ore_ranking_raw, {name=v, amount=amount})
-                end
-                ore_total = ore_total + amount
+        end
+        if not adding then adding = 3 end --Default case
+        if adding > 0 then
+            local amount = adding * game.entity_prototypes[v].autoplace_specification.coverage
+            if game.entity_prototypes[v].mineable_properties.required_fluid then
+                table.insert(ore_ranking_raw, 1, {name=v, amount=amount})
+            else
+                table.insert(ore_ranking_raw, {name=v, amount=amount})
             end
+            ore_total = ore_total + amount
         end
     end
 
@@ -634,10 +635,6 @@ script.on_event(defines.events.on_built_entity, function(event) dangOre(event) e
 script.on_event(defines.events.on_robot_built_entity, function(event) dangOre(event) end)
 script.on_event(defines.events.on_chunk_generated, function(event) gOre(event) end)
 script.on_event(defines.events.on_entity_died, function(event) ore_rly(event) end)
---script.on_configuration_changed(divOresity_init())
--- script.on_event(defines.events.on_tick, function(event)
-	-- unchOret(event)
-	-- -- flOre_is_lava(event) --Intended for multiplayer.
--- end)
---script.on_configuration_changed(function() perlin.shuffle() end)
---script.on_init(function(event) divOresity_init() perlin.shuffle() end)
+script.on_nth_tick(300, function() flOre_is_lava() end)
+script.on_configuration_changed(function() divOresity_init() end)
+script.on_init(function(event) divOresity_init() perlin.shuffle() end)
