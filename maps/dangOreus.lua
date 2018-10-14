@@ -162,6 +162,7 @@ function gOre(event)
                         type = ore_list[clamp(1, #ore_list, math.floor(#ore_list * (noise / 2 + 0.5)) + 1)]
                     elseif DANGORE_MODE == "perlin" then
                         local noise = perlin.noise(x,y)
+                        local ore_list = global.ORE_LIST
                         noise = transferFunc(noise)
                         type = ore_list[clamp(1, #ore_list, math.floor(#ore_list * (noise / 2 + 0.5)) + 1)]
                         if not type then
