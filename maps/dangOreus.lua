@@ -2,7 +2,7 @@
 STARTING_RADIUS = 80
 EASY_ORE_RADIUS = 120
 V_SCALE_FACTOR = 3.0
-DANGORE_MODE = "voronoi" -- random, pie, spiral, voronoi, or perlin
+DANGORE_MODE = "pie" -- random, pie, spiral, voronoi, or perlin
 
 --dangOreus, a scenario by Mylon
 --MIT Licensed
@@ -491,8 +491,10 @@ function divOresity_init()
     
     for k,v in pairs(global.diverse_ore_list) do
         local autoplace = game.surfaces[1].map_gen_settings.autoplace_controls[v]
+        local adding
         if autoplace then
-            local adding = 0
+            if autoplace.frequency == "none" then
+                adding = 0
             if autoplace.frequency == "very-low" then
                 adding = 1
             elseif autoplace.frequency == "low" then
@@ -504,6 +506,7 @@ function divOresity_init()
             elseif autoplace.frequency == "very-high" then
                 adding = 5
             end
+            if not adding then adding = 3 end
             if adding > 0 then
                 local amount = adding * game.entity_prototypes[v].autoplace_specification.coverage
                 if game.entity_prototypes[v].mineable_properties.required_fluid then
