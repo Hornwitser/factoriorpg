@@ -13,36 +13,41 @@ require "rpg" --Award bonuses based on experience earned.
 --require "permissions" --Permission manager
 --require "trusted" --Module to add trusted players to a seperate permission group
 --require "locale/utils/patreon" --Module to give patreons spectate and a nice unique tag
-require "announcements"	--Module to announce stuff ingame / give the players a welcome message
-require "modules/tag" --Module to let players set a tag behind their names to improve teamwork
 --require "fmcd" --Module to consolidate saving data to an output file for the agent
 --require "stats" --Module to generate stats and print them to the filesystem
 --require "popup" --Module to create and display an popup in the center of all players their screens.
 --require "rocket" --Module to stop people removing the rocket silo
 
 --Modules
+--QOL
 require "modules/gravemarker" --Mark player death locations on map for corpse runs.
-require "modules/dirtpath" --For some silliness.
--- require "modules/seasons" --Let's mess with solar. --Causes desyncs until 0.17
---require "modules/dark harvest" --Only way to get uranium is from biter deaths.
---require "modules/tOredumonde" --Ore spawns in directions. This must be called before divOresity. NOTE: STONE_BYPRODUCT must be false.
---require "modules/divOresity" --Some ore gets scrambled and must be filtered.
 require "modules/bluebuild" --Bluebuild softmod
 require "modules/autofill" --Softmod autofill separated from Oarc
 --require "modules/nougatmining" --Logistic mining softmod.
 require "modules/peppermintmining" --Logistic mining softmod.
-require "modules/piety" --Way to consume excess stone.
---require "belt_limit" --Limits number of belts per player.  Mostly for UPS reasons.
 require "modules/bpmirror" --Adds bpmirror command to flip BPs.
 require "modules/votekick" --Allows users to kick other users.
+require "modules/playerlist" --List of online players
+require "modules/tag" --Module to let players set a tag behind their names to improve teamwork
+require "announcements"	--Module to announce stuff ingame / give the players a welcome message
+
+--Silly
+require "modules/dirtpath" --For some silliness.
+require "modules/rainbow" --Top of the line graphics!
+require "modules/nyan" --More silliness.
+
+--Gameplay
+-- require "modules/seasons" --Let's mess with solar. --Causes desyncs until 0.17
+--require "modules/dark harvest" --Only way to get uranium is from biter deaths.
+--require "modules/tOredumonde" --Ore spawns in directions. This must be called before divOresity. NOTE: STONE_BYPRODUCT must be false.
+--require "modules/divOresity" --Some ore gets scrambled and must be filtered.
+require "modules/piety" --Way to consume excess stone.
+--require "belt_limit" --Limits number of belts per player.  Mostly for UPS reasons.
 --require "modules/infinity" --Infinite ore.  Almost.  Don't recommend with peppermint/Nougat
 --require "modules/enhancedbiters" --Adds extra behavior to biters to make them extra nasty.
 --require "modules/lazybastard" --Much slower crafting speed
-require "modules/playerlist" --List of online players
-require "modules/rainbow" --Top of the line graphics!
-require "modules/regional" --Regional Crafting, goods must be produced near matching region markers
+--require "modules/regional" --Regional Crafting, goods must be produced near matching region markers
 --require "rpg_pocket_crafter" --Pocket crafting!
-require "modules/nyan" --More silliness.
 
 -- World Generators: Most are exclusive.
 --require "maps/prospector" --Radars generate ore
