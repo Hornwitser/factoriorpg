@@ -506,16 +506,16 @@ function divOresity_init()
             elseif autoplace.frequency == "very-high" then
                 adding = 5
             end
-            if not adding then adding = 3 end
-            if adding > 0 then
-                local amount = adding * game.entity_prototypes[v].autoplace_specification.coverage
-                if game.entity_prototypes[v].mineable_properties.required_fluid then
-                    table.insert(ore_ranking_raw, 1, {name=v, amount=amount})
-                else
-                    table.insert(ore_ranking_raw, {name=v, amount=amount})
-                end
-                ore_total = ore_total + amount
+        end
+        if not adding then adding = 3 end
+        if adding > 0 then
+            local amount = adding * game.entity_prototypes[v].autoplace_specification.coverage
+            if game.entity_prototypes[v].mineable_properties.required_fluid then
+                table.insert(ore_ranking_raw, 1, {name=v, amount=amount})
+            else
+                table.insert(ore_ranking_raw, {name=v, amount=amount})
             end
+            ore_total = ore_total + amount
         end
     end
 
