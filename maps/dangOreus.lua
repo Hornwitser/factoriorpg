@@ -411,9 +411,9 @@ function divOresity_init()
         if v.type == "resource" and v.resource_category == "basic-solid" and v.autoplace_specification then
             table.insert(global.diverse_ore_list, v.name)
             if v.mineable_properties.required_fluid == nil then
-			    table.insert(global.easy_ore_list, v.name)
+                table.insert(global.easy_ore_list, v.name)
             end
-		end
+        end
 	end
 
     --Check to see if we're playing normal.  Marathon requires more copper.
@@ -495,7 +495,7 @@ function divOresity_init()
         if autoplace then
             if autoplace.frequency == "none" then
                 adding = 0
-            if autoplace.frequency == "very-low" then
+            elseif autoplace.frequency == "very-low" then
                 adding = 1
             elseif autoplace.frequency == "low" then
                 adding = 2
