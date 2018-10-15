@@ -23,6 +23,7 @@ function divOresity_init()
 			end
 		end
 	end
+	log(serpent.line(global.extra_diverse_ores))
 end
 
 function diversify(event)
@@ -35,7 +36,7 @@ function diversify(event)
 					v.destroy()
 				elseif random < global.DIVERSITY_QUOTA then --Replace!
 					local refugee
-					if v.prototype.mineable_properties.required_fluid and EXTRA_DIVORESITY then
+					if v.prototype.mineable_properties.required_fluid and global.EXTRA_DIVORESITY then
 						refugee = global.extra_diverse_ores[math.random(#global.extra_diverse_ores)]
 					else
 						refugee = global.diverse_ores[math.random(#global.diverse_ores)]
