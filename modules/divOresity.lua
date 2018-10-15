@@ -7,8 +7,7 @@ global.DIVERSITY_QUOTA = settings.global["diversity quota"].value
 global.EXEMPT_AREA = settings.global["exempt area"].value
 global.STONE_BYPRODUCT = settings.global["stone byproduct"].value
 global.STONE_BYPRODUCT_RATIO = settings.global["stone byproduct ratio"].value
-
-EXTRA_DIVORESITY = true
+global.EXTRA_DIVORESITY = settings.global["extra divoresity"].value
 
 --Build a table of potential ores to pick from.  Uranium is exempt from popping up randomly.
 function divOresity_init()
