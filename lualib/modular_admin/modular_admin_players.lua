@@ -70,15 +70,15 @@ function modular_admin_players_gui_clicked(event)
 			end
 			if not (e.valid) then return end
 			for _, player in pairs(game.connected_players) do
-				if e.name == "modular_admin_players_label_player_list_teleport_" .. player.name then
-					p.teleport(player.position)
-				elseif e.name == "modular_admin_players_label_player_list_follow_" .. player.name then
-					if modular_admin_submodule_state("modular_admin_spectate_follow") then
-						modular_admin_spectate_set_spectator(p)
-						modular_admin_spectate_set_follow_target(p, player)
-					end
-				end
-			end
+                if e.name == "modular_admin_players_label_player_list_teleport_" .. player.name then
+                    p.teleport(player.surface.find_non_colliding_position("player", player.position, 0, 1))
+                elseif e.name == "modular_admin_players_label_player_list_follow_" .. player.name then
+                    if modular_admin_submodule_state("modular_admin_spectate_follow") then
+                        modular_admin_spectate_set_spectator(p)
+                        modular_admin_spectate_set_follow_target(p, player)
+                    end
+                end
+            end
 		end
 	end
 end

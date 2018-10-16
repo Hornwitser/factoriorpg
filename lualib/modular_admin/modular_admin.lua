@@ -11,6 +11,16 @@
 --
 
 global.modular_admin = global.modular_admin or {}
+
+global.modular_admin.use_sprite_button_open = true
+global.modular_admin.use_sprite_button_close = false
+global.modular_admin.sprite_button_open_sprite = "utility/side_menu_bonus_icon"
+global.modular_admin.sprite_button_close_sprite = "utility/side_menu_bonus_icon"
+global.modular_admin.sprite_button_open_tooltip = "Open Admin Menu"
+global.modular_admin.sprite_button_close_tooltip = "Close Admin Menu"
+global.modular_admin.button_open_caption = "Open Admin Menu"
+global.modular_admin.button_close_caption = "Close Admin Menu"
+
 global.modular_admin.raw = global.modular_admin.raw or {}
 global.modular_admin.sorted = global.modular_admin.sorted or {}
 global.modular_admin.visible = global.modular_admin.visible or {}
@@ -93,12 +103,18 @@ function modular_admin_gui_toggle_visibility(p)
 	global.modular_admin.visible[p.name] = global.modular_admin.visible[p.name] or false
 	if global.modular_admin.visible[p.name] then
 		global.modular_admin.visible[p.name] = false
-		topgui_change_button_caption(p.name, "modular_admin_toggle_button", "Open Admin Menu")
-		topgui_change_button_color(p.name, "modular_admin_toggle_button", {r=0, g=1, b=0})
+		if global.modular_admin.use_sprite_button_open then
+			topgui_add_button(p.name, {type="sprite-button", name = "modular_admin_toggle_button", sprite = global.modular_admin.sprite_button_open_sprite, tooltip=global.modular_admin.sprite_button_open_tooltip})
+		else 
+			topgui_add_button(p.name, {name = "modular_admin_toggle_button", caption = global.modular_admin.button_open_caption, color = {r=0, g=1, b=0}})
+		end
 	else
 		global.modular_admin.visible[p.name] = true
-		topgui_change_button_caption(p.name, "modular_admin_toggle_button", "Close Admin Menu")
-		topgui_change_button_color(p.name, "modular_admin_toggle_button", {r=1, g=0, b=0})
+		if global.modular_admin.use_sprite_button_close then
+			topgui_add_button(p.name, {type="sprite-button", name = "modular_admin_toggle_button", sprite = global.modular_admin.sprite_button_close_sprite, tooltip=global.modular_admin.sprite_button_close_tooltip})
+		else 
+			topgui_add_button(p.name, {name = "modular_admin_toggle_button", caption = global.modular_admin.button_close_caption, color = {r=1, g=0, b=0}})
+		end
 	end
 	local tg = modular_admin_get_flow(p)
 	tg.style.visible = global.modular_admin.visible[p.name]
@@ -180,9 +196,17 @@ Event.register(defines.events.on_player_joined_game, function(event)
 		global.modular_admin.visible[p.name] = global.modular_admin.visible[p.name] or false
 		modular_admin_gui_changed(p)
 		if global.modular_admin.visible[p.name] then
-			topgui_add_button(p.name, {name = "modular_admin_toggle_button", caption = "Close Admin Menu", color = {r=1, g=0, b=0}})
+			if global.modular_admin.use_sprite_button_close then
+				topgui_add_button(p.name, {type="sprite-button", name = "modular_admin_toggle_button", sprite = global.modular_admin.sprite_button_close_sprite, tooltip=global.modular_admin.sprite_button_close_tooltip})
+			else 
+				topgui_add_button(p.name, {name = "modular_admin_toggle_button", caption = global.modular_admin.button_close_caption, color = {r=1, g=0, b=0}})
+			end
 		else
-			topgui_add_button(p.name, {name = "modular_admin_toggle_button", caption = "Open Admin Menu", color = {r=0, g=1, b=0}})
+			if global.modular_admin.use_sprite_button_open then
+				topgui_add_button(p.name, {type="sprite-button", name = "modular_admin_toggle_button", sprite = global.modular_admin.sprite_button_open_sprite, tooltip=global.modular_admin.sprite_button_open_tooltip})
+			else 
+				topgui_add_button(p.name, {name = "modular_admin_toggle_button", caption = global.modular_admin.button_open_caption, color = {r=0, g=1, b=0}})
+			end
 		end
 	end
 end)

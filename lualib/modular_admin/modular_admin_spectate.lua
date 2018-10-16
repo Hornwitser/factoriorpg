@@ -168,15 +168,16 @@ function modular_admin_spectate_set_spectator(p)
 				p.character.destructible = false
 				p.walking_state = { walking = false, direction = defines.direction.north }
 				global.modular_admin_spectate.player_spectator_character[index] = p.character
-				global.modular_admin_spectate.player_spectator_force[index] = p.force
 				--store character logistics slots due to an apparent bug in the base game that discards them when returning from spectate
 				global.modular_admin_spectate.player_spectator_logistics_slots[index] = {}
 				for slot=1, p.character.request_slot_count do
 					global.modular_admin_spectate.player_spectator_logistics_slots[index][slot] = p.character.get_request_slot(slot)
 				end
 				p.set_controller { type = defines.controllers.god }
-				p.cheat_mode = true
+				
 			end
+			global.modular_admin_spectate.player_spectator_force[index] = p.force
+			p.cheat_mode = true
 			if game.forces.Admins ~= nil then
 				p.force = game.forces["Admins"]
 			end

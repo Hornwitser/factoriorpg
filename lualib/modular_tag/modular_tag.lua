@@ -1,8 +1,20 @@
 -- Give players the option to set their preferred role as a tag
--- A 3Ra Gaming creation
 -- Modified by I_IBlackI_I
 
 global.modular_tag = global.modular_tag or {}
+
+global.modular_tag.use_sprite_button_open = true
+global.modular_tag.use_sprite_button_close = false
+global.modular_tag.sprite_button_open_sprite = "utility/side_menu_achievements_icon"
+global.modular_tag.sprite_button_close_sprite = "utility/side_menu_achievements_icon"
+global.modular_tag.sprite_button_open_tooltip = "Open tag menu"
+global.modular_tag.sprite_button_close_tooltip = "Close tag menu"
+global.modular_tag.button_open_caption = "Open Tag"
+global.modular_tag.button_close_caption = "Close Tag"
+
+
+
+
 global.modular_tag.visible = global.modular_tag.visible or {}
 
 require "modular_tag_patreon"
@@ -11,6 +23,8 @@ require "modular_tag_patreon"
 global.modular_tag.tags = {
 	{ display_name = "Clear", color = {r=1,g=0,b=0} },
 	{ display_name = "Mining" },
+	{ display_name = "Lumberjack" },
+	{ display_name = "Fishing" },
 	{ display_name = "Oil" },
 	{ display_name = "Bus" },
 	{ display_name = "Smelting" },
@@ -18,6 +32,7 @@ global.modular_tag.tags = {
 	{ display_name = "Automation" },
 	{ display_name = "Quality Control" },
 	{ display_name = "Power" },
+	{ display_name = "Lights" },
 	{ display_name = "Trains" },
 	{ display_name = "Science" },
 	{ display_name = "Robotics"},
@@ -29,9 +44,17 @@ function modular_tag_create_gui(event)
 	local p = player
 	global.modular_tag.visible[p.name] = global.modular_tag.visible[p.name] or false
 	if global.modular_tag.visible[p.name] then
-		topgui_add_button(p.name, {name = "modular_tag_toggle_button", caption = "Close Tag", color = {r=1, g=0, b=0}})
+		if global.modular_tag.use_sprite_button_close then
+			topgui_add_button(p.name, {type="sprite-button", name = "modular_tag_toggle_button", sprite = global.modular_tag.sprite_button_close_sprite, tooltip=global.modular_tag.sprite_button_close_tooltip})
+		else 
+			topgui_add_button(p.name, {name = "modular_tag_toggle_button", caption = global.modular_tag.button_close_caption, color = {r=1, g=0, b=0}})
+		end
 	else
-		topgui_add_button(p.name, {name = "modular_tag_toggle_button", caption = "Open Tag", color = {r=0, g=1, b=0}})
+		if global.modular_tag.use_sprite_button_open then
+			topgui_add_button(p.name, {type="sprite-button", name = "modular_tag_toggle_button", sprite = global.modular_tag.sprite_button_open_sprite, tooltip=global.modular_tag.sprite_button_open_tooltip})
+		else 
+			topgui_add_button(p.name, {name = "modular_tag_toggle_button", caption = global.modular_tag.button_open_caption, color = {r=0, g=1, b=0}})
+		end
 	end
 	modular_tag_update_gui(player)
 end
@@ -39,10 +62,18 @@ end
 
 function modular_tag_toggle_gui_visibility(player)
 	if global.modular_tag.visible[player.name] then
-		topgui_add_button(player.name, {name = "modular_tag_toggle_button", caption = "Open Tag", color = {r=0, g=1, b=0}})
+		if global.modular_tag.use_sprite_button_open then
+			topgui_add_button(player.name, {type="sprite-button", name = "modular_tag_toggle_button", sprite = global.modular_tag.sprite_button_open_sprite, tooltip=global.modular_tag.sprite_button_open_tooltip})
+		else 
+			topgui_add_button(player.name, {name = "modular_tag_toggle_button", caption = global.modular_tag.button_open_caption, color = {r=0, g=1, b=0}})
+		end
 		global.modular_tag.visible[player.name] = false
 	else
-		topgui_add_button(player.name, {name = "modular_tag_toggle_button", caption = "Close Tag", color = {r=1, g=0, b=0}})
+		if global.modular_tag.use_sprite_button_close then
+			topgui_add_button(player.name, {type="sprite-button", name = "modular_tag_toggle_button", sprite = global.modular_tag.sprite_button_close_sprite, tooltip=global.modular_tag.sprite_button_close_tooltip})
+		else 
+			topgui_add_button(player.name, {name = "modular_tag_toggle_button", caption = global.modular_tag.button_close_caption, color = {r=1, g=0, b=0}})
+		end
 		global.modular_tag.visible[player.name] = true
 	end
 	modular_tag_get_frame(player).style.visible = global.modular_tag.visible[player.name]

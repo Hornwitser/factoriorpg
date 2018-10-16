@@ -12,8 +12,8 @@ global.modular_information_popup.popups = global.modular_information_popup.popup
 --
 --	FUNCTIONS
 --
-function modular_information_popup_create_gui(p)
-	modular_information_popup_update_popup(p, #global.modular_information_popup.popups)
+function modular_information_popup_create_gui(p, i)
+	modular_information_popup_update_popup(p, i)
 	modular_information_popup_update_menu(p)
 end
 	
@@ -25,21 +25,28 @@ function modular_information_popup_update_popup(p, i)
 	local miipl = miip.add {type="label", caption = mipp.text}
 	miipl.style.maximal_width = 480
 	miipl.style.single_line = false
+	if(p.admin) then
+		local mipnc = miip.add {type="button", name = "modular_information_popup_repop_" .. i, caption = "Repop"}
+		mipnc.style.font_color = {r=0, g=0.5, b=0}
+		mipnc.style.minimal_width = 140
+		mipnc.style.maximal_width = 140
+	end
 end	
 
 function modular_information_popup_add(b, t)
 	local popup = {button = b, text = t}
 	table.insert(global.modular_information_popup.popups, popup)
 	for i, x in ipairs(game.connected_players) do
-		modular_information_popup_show(x)
+		modular_information_popup_show(x, #global.modular_information_popup.popups)
 	end
 end
 
-function modular_information_popup_show(p)
+function modular_information_popup_show(p, i)
 	modular_information_set_active_button(p, "modular_information_popup")
 	modular_information_gui_show(p)
-	modular_information_popup_create_gui(p)
+	modular_information_popup_create_gui(p, i)
 end
+
 
 function modular_information_popup_update_menu(p)
 	local mimc = modular_information_get_menu_canvas(p)
@@ -104,11 +111,16 @@ function modular_information_popup_gui_clicked(event)
 				modular_information_set_active_button(p, "none")
 			else
 				modular_information_set_active_button(p, "modular_information_popup")
-				modular_information_popup_create_gui(p)
+				modular_information_popup_create_gui(p, #global.modular_information_popup.popups)
 			end
 		elseif e.name:find("modular_information_popup_button_") ~= nil then
 			i = tonumber(e.name:sub(34))
 			modular_information_popup_update_popup(p, i)
+		elseif e.name:find("modular_information_popup_repop_") ~= nil and p.admin then
+			i = tonumber(e.name:sub(33))
+			for _, x in ipairs(game.connected_players) do
+				modular_information_popup_show(x, i)
+			end
 		elseif e.name == "modular_information_popup_create" then
 			modular_information_popup_show_creator(p)
 		elseif e.name == "modular_information_popup_new_create" then
