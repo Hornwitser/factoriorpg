@@ -23,7 +23,7 @@ end
 
 function bluebuild.initPlayer(event)
 	if not global.runOnce then
-		runOnce()
+		bluebuild.runOnce()
 	end
 	global.blueBuildToggle[event.player_index] = false
 	global.blueDemoToggle[event.player_index] = false
