@@ -70,4 +70,4 @@ function rpg_permissions_init()
 end
 
 Event.register(defines.events.on_player_joined_game, auto_promote)
-Event.register(-1, rpg_permissions_init)
+Event.register('on_init', rpg_permissions_init)

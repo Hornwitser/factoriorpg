@@ -708,7 +708,7 @@ Event.register(defines.events.on_tick, nerfSolar)
 -- 	game.map_settings.enemy_evolution.pollution_factor = 0.000015 * EVOLUTION_SCALE * global.modDifficulty
 -- end)
 
-Event.register(-1, survival_init)
+Event.register('on_init', survival_init)
 
 function survival_init()
 	global.customBiters = {}

@@ -70,6 +70,6 @@ Event.register(defines.events.on_tick, function(event)
     end
 end)
 
-Event.register(-1, function(event)
+Event.register('on_init', function(event)
 end)
 

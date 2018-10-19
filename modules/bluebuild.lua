@@ -23,7 +23,7 @@ end
 
 function bluebuild.initPlayer(event)
 	if not global.runOnce then
-		runOnce()
+		bluebuild.runOnce()
 	end
 	global.blueBuildToggle[event.player_index] = false
 	global.blueDemoToggle[event.player_index] = false
@@ -35,7 +35,7 @@ end
 
 function bluebuild.playerloop()
 	if not global.runOnce then
-		runOnce()
+		bluebuild.runOnce()
 	end
 	if not global.blueBuildSwitch then
 		return
@@ -308,4 +308,4 @@ Event.register(defines.events.on_tick, bluebuild.playerloop)
 
 Event.register(defines.events.on_marked_for_deconstruction, bluebuild.demotoggle)
 
-Event.register(-1, bluebuild.runOnce)
+Event.register('on_init', bluebuild.runOnce)

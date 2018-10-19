@@ -113,4 +113,4 @@ end
 Event.register(defines.events.on_entity_died, rpg_beast_taming)
 Event.register(defines.events.on_tick, rpg_beast_sickem)
 Event.register(defines.events.on_tick, rpg_free_pets)
-Event.register(-1, rpg_beast_init)
+Event.register('on_init', rpg_beast_init)

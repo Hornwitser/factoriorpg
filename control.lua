@@ -1,14 +1,12 @@
 --Heavy lifting stuff here.
 require "mod-gui" --Klonan's button prettifier
-require "utils/event" --This is so all of the modules play nice with each other.
+Event = require('lib/event') --This is so all of the modules play nice with each other.
 require "utils/topgui" --Allows reordering guis.
 require "utils/bot" --Discord integration
 require "utils/antigrief" --Look for suspicious behavior and report it to admins/log it.
-require "utils/modular_admin/modular_admin" --FMMO admin tools 
+--require "utils/modular_admin/modular_admin" --FMMO admin tools 
 --require "utils/modular_information/modular_information" --Info windows from FMMO
---require "utils/perlin" --Perlin Noise. NOTE: If a module needs this, it'll call it.
 require "modules/module_list" --Creates and displays a list of active modules on login.
-require "rpg_permissions" --Limit certain actions to players level 5 or greater
 require "rpg" --Award bonuses based on experience earned.
 --require "permissions" --Permission manager
 --require "trusted" --Module to add trusted players to a seperate permission group
@@ -23,8 +21,8 @@ require "rpg" --Award bonuses based on experience earned.
 require "modules/gravemarker" --Mark player death locations on map for corpse runs.
 require "modules/bluebuild" --Bluebuild softmod
 require "modules/autofill" --Softmod autofill separated from Oarc
---require "modules/nougatmining" --Logistic mining softmod.
-require "modules/peppermintmining" --Logistic mining softmod.
+require "modules/nougatmining" --Logistic mining softmod.
+--require "modules/peppermintmining" --Logistic mining softmod.
 require "modules/bpmirror" --Adds bpmirror command to flip BPs.
 require "modules/votekick" --Allows users to kick other users.
 require "modules/playerlist" --List of online players
