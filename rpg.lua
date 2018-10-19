@@ -12,7 +12,7 @@
 --require "rpg_beastmaster" --New class gets its own file for class-related events.
 --require "rpg_stats" --Keep track of silly stats
 --require "rpg_builder" --Very unfinished.  Adds a limited number of higher level turrets for builders.
---require "rpgdata" --Savedata.  This is externally generated.
+require "rpg_permissions" --Limit certain actions to players level 5 or greater
 	
 rpg = {}
 rpg.classes = {"Engineer", "Miner", "Builder", "Soldier", "Scientist", "Beastmaster"}
@@ -122,6 +122,8 @@ end
 
 --On player join, set default values
 function rpg_loadsave(event)
+	if not global.rpg_data then rpg_init() end
+
 	local player = game.players[event.player_index]
 	if player.name == "" then
 		game.print("Error, player.name is empty.")
@@ -682,7 +684,7 @@ function rpg_levelup(player)
 	
 	--Promote and allow decon planners
 	if global.rpg_tmp[player.name].level >= 5 then
-		if player.permission_group.name == "Default" then
+		if not player.permission_group or player.permission_group.name == "Default" then
 			player.permission_group = game.permissions.get_group("trusted")
 		end
 	end
@@ -1027,11 +1029,12 @@ end
 -- end
 
 function rpg_init()
+	if global.rpg_data then return end
 	global.rpg_data = {}
 	global.rpg_tmp = {} --For non-persistent data.
 
-	global.rpg = {}
-	global.rpg.heartbeat = {}
+	--global.rpg = {}
+	--global.rpg.heartbeat = {}
 	
 	global.base_evolution_destroy = game.map_settings.enemy_evolution.destroy_factor
 	global.base_evolution_pollution = game.map_settings.enemy_evolution.pollution_factor
@@ -1085,4 +1088,4 @@ Event.register(defines.events.on_pre_player_died, rpg_im_too_smart_to_die)
 --Event.register(defines.events.on_tick, rpg.heartbeat)
 --Event.register(defines.events.on_research_finished, rpg_nerf_tech)
 --Event.register(defines.events.on_tick, rpg_exp_tick) --For debug
-Event.register(-1, rpg_init)
+Event.register('on_init', rpg_init)

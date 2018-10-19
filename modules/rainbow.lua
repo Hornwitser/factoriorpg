@@ -4,15 +4,24 @@
 
 global.rainbow = {}
 
-commands.add_command("rainbow", "Rainbow chat colors!", function()
-    if game.player and game.player.admin then
-        if not global.rainbow[game.player.name] then
-            global.rainbow[game.player.name] = 1800000 * math.random() --This is an offset so everyone doesn't have the same color.
-        else
-            global.rainbow[game.player.name] = nil
-            game.player.color = {}
-            game.player.chat_color = {}
+commands.add_command("rainbow", "Rainbow chat colors!", function(params)
+    if not (game.player and game.player.admin) then return end
+    local target
+    if params and params.parameter then
+        target = game.players[params.parameter:lower()]
+        if not target then
+            game.player.print("Invalid player name.")
+            return
         end
+    else
+        target = game.player
+    end
+    if not global.rainbow[target.name] then
+        global.rainbow[target.name] = 1800000 * math.random() --This is an offset so everyone doesn't have the same color.
+    else
+        global.rainbow[target.name] = nil
+        target.color = {}
+        target.chat_color = {}
     end
 end)
 
@@ -34,4 +43,4 @@ function rainbow()
     end
 end
 
-script.on_nth_tick(3, rainbow)
+Event.register(-3, rainbow)

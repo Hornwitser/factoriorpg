@@ -52,6 +52,5 @@ function diversify(event)
 	end
 end
 
-script.on_event(defines.events.on_chunk_generated, diversify)
-script.on_init(divOresity_init)
-script.on_configuration_changed(divOresity_init)
+Event.register(defines.events.on_chunk_generated, diversify)
+Event.register('on_init', divOresity_init)
