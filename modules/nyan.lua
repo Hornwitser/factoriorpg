@@ -5,13 +5,22 @@
 global.nyan = {}
 nyan = {}
 
-commands.add_command("nyan", "Become nyan cat", function()
-    if game.player and game.player.admin then
-        if not global.nyan[game.player.name] then
-            global.nyan[game.player.name] = {index=1, old_pos = game.player.position }
-        else
-            global.nyan[game.player.name] = nil
+commands.add_command("nyan", "Become nyan cat", function(params)
+    if not (game.player and game.player.admin) then return end
+    local target
+    if params and params.parameter then
+        target = game.players[params.parameter:lower()]
+        if not target then
+            game.player.print("Invalid player name.")
+            return
         end
+    else
+        target = game.player
+    end
+    if not global.nyan[target.name] then
+        global.nyan[target.name] = {index=1, old_pos = game.player.position }
+    else
+        global.nyan[target.name] = nil
     end
 end)
 
