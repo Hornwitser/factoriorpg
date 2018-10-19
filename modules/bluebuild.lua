@@ -35,7 +35,7 @@ end
 
 function bluebuild.playerloop()
 	if not global.runOnce then
-		runOnce()
+		bluebuild.runOnce()
 	end
 	if not global.blueBuildSwitch then
 		return
