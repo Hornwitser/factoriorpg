@@ -2,6 +2,7 @@
 STARTING_RADIUS = 80
 EASY_ORE_RADIUS = 120
 V_SCALE_FACTOR = 3.0
+EASY_MODE = false
 DANGORE_MODE = "pie" -- random, pie, spiral, voronoi, or perlin
 
 --dangOreus, a scenario by Mylon
@@ -287,7 +288,7 @@ function dangOre(event)
     if event.created_entity.type == "locomotive" or event.created_entity.type == "fluid-wagon" or event.created_entity.type == "cargo-wagon" then
         return
     end
-    if settings.global["easy mode"].value then --Dificulty setting
+    if EASY_MODE then --Dificulty setting
 		if event.created_entity.type == "transport-belt" or
 		event.created_entity.type == "underground-belt" or
 		event.created_entity.type == "splitter" or

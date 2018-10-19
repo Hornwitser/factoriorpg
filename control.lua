@@ -1,6 +1,6 @@
 --Heavy lifting stuff here.
 require "mod-gui" --Klonan's button prettifier
-require "utils/event" --This is so all of the modules play nice with each other.
+Event = require('lib/event') --This is so all of the modules play nice with each other.
 require "utils/topgui" --Allows reordering guis.
 require "utils/bot" --Discord integration
 require "utils/antigrief" --Look for suspicious behavior and report it to admins/log it.

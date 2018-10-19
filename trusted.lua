@@ -54,7 +54,7 @@ function trusted_joined(event)
 end
 
 
-Event.register(-1, function()
+Event.register('on_init', function()
 	commands.add_command("trust", "Enter the username of the player you want to add to the trusted list.", trusted_add)
 	commands.add_command("trust_remove", "Enter the username of the player you want to remove from the trusted list.", trusted_remove)
 end)

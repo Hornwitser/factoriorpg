@@ -3,10 +3,10 @@
 --MIT licensed
 --Inspired by Ore Chaos
 
-global.DIVERSITY_QUOTA = settings.global["diversity quota"].value
-global.EXEMPT_AREA = settings.global["exempt area"].value
-global.STONE_BYPRODUCT = settings.global["stone byproduct"].value
-global.STONE_BYPRODUCT_RATIO = settings.global["stone byproduct ratio"].value
+DIVERSITY_QUOTA = 0.25
+EXEMPT_AREA = 0
+STONE_BYPRODUCT = false
+STONE_BYPRODUCT_RATIO = 0.30
 
 EXTRA_DIVORESITY = true
 
@@ -52,6 +52,5 @@ function diversify(event)
 	end
 end
 
-script.on_event(defines.events.on_chunk_generated, diversify)
-script.on_init(divOresity_init)
-script.on_configuration_changed(divOresity_init)
+Event.register(defines.events.on_chunk_generated, diversify)
+Event.register('on_init', divOresity_init)

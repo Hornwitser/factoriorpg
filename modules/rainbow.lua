@@ -43,4 +43,4 @@ function rainbow()
     end
 end
 
-script.on_nth_tick(3, rainbow)
+Event.register(-3, rainbow)

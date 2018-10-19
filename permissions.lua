@@ -278,4 +278,4 @@ Event.register(defines.events.on_player_joined_game, function(event)
 	end
 end)
 
-Event.register(-1, permissions_init)
+Event.register('on_init', permissions_init)
