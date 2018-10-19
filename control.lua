@@ -4,7 +4,7 @@ require "utils/event" --This is so all of the modules play nice with each other.
 require "utils/topgui" --Allows reordering guis.
 require "utils/bot" --Discord integration
 require "utils/antigrief" --Look for suspicious behavior and report it to admins/log it.
-require "utils/modular_admin/modular_admin" --FMMO admin tools 
+--require "utils/modular_admin/modular_admin" --FMMO admin tools 
 --require "utils/modular_information/modular_information" --Info windows from FMMO
 --require "utils/perlin" --Perlin Noise. NOTE: If a module needs this, it'll call it.
 require "modules/module_list" --Creates and displays a list of active modules on login.
