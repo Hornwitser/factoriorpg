@@ -122,6 +122,8 @@ end
 
 --On player join, set default values
 function rpg_loadsave(event)
+	if not global.rpg_data then rpg_init() end
+
 	local player = game.players[event.player_index]
 	if player.name == "" then
 		game.print("Error, player.name is empty.")
@@ -1027,22 +1029,23 @@ end
 -- end
 
 function rpg_init()
+	if global.rpg_data then return end
 	global.rpg_data = {}
 	global.rpg_tmp = {} --For non-persistent data.
 
-	global.rpg = {}
-	global.rpg.heartbeat = {}
+	--global.rpg = {}
+	--global.rpg.heartbeat = {}
 	
-	global.base_evolution_destroy = game.map_settings.enemy_evolution.destroy_factor
-	global.base_evolution_pollution = game.map_settings.enemy_evolution.pollution_factor
-	global.base_evolution_time = game.map_settings.enemy_evolution.time_factor
+	-- global.base_evolution_destroy = game.map_settings.enemy_evolution.destroy_factor
+	-- global.base_evolution_pollution = game.map_settings.enemy_evolution.pollution_factor
+	-- global.base_evolution_time = game.map_settings.enemy_evolution.time_factor
 	--Players can give bonuses to the team, so let's nerf the base values so players can re-buff them.
 	
 	--Doh, can't have a negative bonus.  This does not work.
 	--game.forces.player.character_health_bonus = -50
 
 	--Scenario stuff.
-	global.satellites_launched = 0
+	--global.satellites_launched = 0
 	--game.forces.Admins.chart(player.surface, {{-400, -400}, {400, 400}}) --This doesn't work.  Admins is not created at the time?
 	
 end
