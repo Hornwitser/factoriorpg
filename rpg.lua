@@ -12,7 +12,7 @@
 --require "rpg_beastmaster" --New class gets its own file for class-related events.
 --require "rpg_stats" --Keep track of silly stats
 --require "rpg_builder" --Very unfinished.  Adds a limited number of higher level turrets for builders.
---require "rpgdata" --Savedata.  This is externally generated.
+require "rpg_permissions" --Limit certain actions to players level 5 or greater
 	
 rpg = {}
 rpg.classes = {"Engineer", "Miner", "Builder", "Soldier", "Scientist", "Beastmaster"}
