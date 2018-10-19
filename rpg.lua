@@ -1036,16 +1036,16 @@ function rpg_init()
 	--global.rpg = {}
 	--global.rpg.heartbeat = {}
 	
-	-- global.base_evolution_destroy = game.map_settings.enemy_evolution.destroy_factor
-	-- global.base_evolution_pollution = game.map_settings.enemy_evolution.pollution_factor
-	-- global.base_evolution_time = game.map_settings.enemy_evolution.time_factor
+	global.base_evolution_destroy = game.map_settings.enemy_evolution.destroy_factor
+	global.base_evolution_pollution = game.map_settings.enemy_evolution.pollution_factor
+	global.base_evolution_time = game.map_settings.enemy_evolution.time_factor
 	--Players can give bonuses to the team, so let's nerf the base values so players can re-buff them.
 	
 	--Doh, can't have a negative bonus.  This does not work.
 	--game.forces.player.character_health_bonus = -50
 
 	--Scenario stuff.
-	--global.satellites_launched = 0
+	global.satellites_launched = 0
 	--game.forces.Admins.chart(player.surface, {{-400, -400}, {400, 400}}) --This doesn't work.  Admins is not created at the time?
 	
 end
