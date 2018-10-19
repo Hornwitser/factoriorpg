@@ -356,9 +356,6 @@ end
 
 --Limit exploring
 function flOre_is_lava(event)
-    if not (event.tick % (300) == 31) then
-        return
-    end
     for n, p in pairs(game.connected_players) do
         if not p.character then --Spectator or admin
             return
@@ -633,6 +630,7 @@ function divOresity_init()
     --/c game.print(game.entity_prototypes["copper-ore"].autoplace_specification.coverage/game.entity_prototypes["zinc-ore"].autoplace_specification.coverage)
 end
 
+Event.register(-300, flOre_is_lava)
 Event.register(defines.events.on_built_entity, dangOre)
 Event.register(defines.events.on_robot_built_entity, dangOre)
 Event.register(defines.events.on_chunk_generated, gOre)
