@@ -23,8 +23,8 @@ require "rpg" --Award bonuses based on experience earned.
 require "modules/gravemarker" --Mark player death locations on map for corpse runs.
 require "modules/bluebuild" --Bluebuild softmod
 require "modules/autofill" --Softmod autofill separated from Oarc
---require "modules/nougatmining" --Logistic mining softmod.
-require "modules/peppermintmining" --Logistic mining softmod.
+require "modules/nougatmining" --Logistic mining softmod.
+--require "modules/peppermintmining" --Logistic mining softmod.
 require "modules/bpmirror" --Adds bpmirror command to flip BPs.
 require "modules/votekick" --Allows users to kick other users.
 require "modules/playerlist" --List of online players
