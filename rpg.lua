@@ -684,7 +684,7 @@ function rpg_levelup(player)
 	
 	--Promote and allow decon planners
 	if global.rpg_tmp[player.name].level >= 5 then
-		if player.permission_group.name == "Default" then
+		if not player.permission_group or player.permission_group.name == "Default" then
 			player.permission_group = game.permissions.get_group("trusted")
 		end
 	end
