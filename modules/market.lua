@@ -1,0 +1,11 @@
+-- Mylon's Magnificent Market
+-- Written 2018-10
+-- MIT License
+
+-- Things to buy:
+-- +1 worker cargo
+-- Unlock Loader Recipe
+-- Railgun (100 SMG)
+-- Railgun ammo (1 stack piercing = 1 stack railgun ammo)
+-- Biter negative evolution?
+-- Level 2 modules
