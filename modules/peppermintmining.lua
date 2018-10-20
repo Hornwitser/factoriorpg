@@ -377,4 +377,4 @@ end
 Event.register(defines.events.on_player_deconstructed_area, peppermint.mark)
 Event.register(defines.events.on_tick, peppermint.stretch)
 Event.register(defines.events.on_resource_depleted, peppermint.nom)
---Event.register(-1, peppermint.brew)
+--Event.register('on_init', peppermint.brew)

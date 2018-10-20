@@ -99,4 +99,4 @@ function seasons.day_length()
 end
 
 Event.register(defines.events.on_tick, seasons.daylight_savings)
-Event.register(-1, seasons.day_length)
+Event.register('on_init', seasons.day_length)

@@ -33,4 +33,4 @@ function tOre.challenge(event)
 end
 
 Event.register(defines.events.on_chunk_generated, tOre.challenge)
-Event.register(-1, tOre.spin)
+Event.register('on_init', tOre.spin)

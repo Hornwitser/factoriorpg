@@ -41,7 +41,7 @@ end
 --	EVENTS
 --
 
-Event.register(-1, function(event)
+Event.register('on_init', function(event)
 	if(global.modular_admin_alert.enabled) then
 		modular_admin_add_submodule("modular_admin_alert")
 	else

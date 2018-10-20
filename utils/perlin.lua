@@ -60,7 +60,7 @@ function perlin.shuffle()
     end
 end
 
-Event.register(-1, perlin.shuffle)
+Event.register('on_init', perlin.shuffle)
 
 --     while n > 2 do
 --         local k = math.random(n)
@@ -210,4 +210,4 @@ function perlin.lerp(t, a, b)
     return a + t * (b - a)
 end
 
---Event.register(-1, perlin.shuffle)
+--Event.register('on_init', perlin.shuffle)

@@ -18,8 +18,8 @@ global.announcements.announcements = {
 global.announcements.intros = {
 	"Need an admin? Type @hands in chat!",
 	"Check out our patreon: http://patreon.com/factoriommo",
-	"Check out our discord: http://discord.me/factoriommo"
-	"Welcome to Factorio RPG!  Earn exp by launching rockets, researching technology, or killing biter nests.  The first rocket is worth the most.",
+	"Check out our discord: http://discord.me/factoriommo",
+	"Welcome to Factorio RPG hosted by FMMO!  Earn exp by launching rockets, researching technology, or killing biter nests.  The first rocket is worth the most.",
 	"Levels provide small bonuses like movement speed, bonus inventory slots, bonus health, and more.",
 }
 -- Go through the announcements, based on the delay set in config

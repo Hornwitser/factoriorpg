@@ -22,5 +22,5 @@ end
 if rpg then
 	Event.register(rpg.on_reset_technology_effects, lazy.craft_speed)
 end
-Event.register(-1, lazy.init)
+Event.register('on_init', lazy.init)
 Event.register(defines.events.on_player_created, lazy.tool)

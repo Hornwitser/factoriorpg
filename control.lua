@@ -1,7 +1,8 @@
 --Heavy lifting stuff here.
 require "mod-gui" --Klonan's button prettifier
-Event = require('lib/event') --This is so all of the modules play nice with each other.
+Event = require "lib/event"
 require "utils/topgui" --Allows reordering guis.
+require "mod-gui" --required for all other modules
 require "utils/bot" --Discord integration
 require "utils/antigrief" --Look for suspicious behavior and report it to admins/log it.
 require "utils/modular_admin/modular_admin" --FMMO admin tools 
@@ -61,11 +62,6 @@ require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
 --require "nuclear" --worldgenerator for nuclear scenario
 --NOT UPDATED require "grid" --Worldgenerator which devides the world into a grid.
 
-
-
-require "lualib/event"
-require "mod-gui" --required for all other modules
-
 -- Give player starting items.
 -- @param event on_player_joined event
 function player_joined(event)
@@ -84,14 +80,13 @@ function player_joined(event)
     end
 end
 
-require "lualib/pdnc" --Zr's fancy day-night cycle stuff
+--require "lualib/pdnc" --Zr's fancy day-night cycle stuff
 -- require "wg_jungle" --Jungle World Generator, generates a world full of trees!
 
-require "debug"
-
+--require "debug"
 
 Event.register(defines.events.on_player_created, player_joined)
-Event.register(defines.events.on_player_respawned, player_respawned)
+--Event.register(defines.events.on_player_respawned, player_respawned)
 
 --Time for the debug code.  If any (not global.) globals are written to at this point, an error will be thrown.
 --eg, x = 2 will throw an error because it's not global.x or local x

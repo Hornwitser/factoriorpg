@@ -45,7 +45,7 @@ Event.register(defines.events.on_player_joined_game, function(event)
 	modular_information_stats_create_gui(p)
 end)
 
-Event.register(-1, function(event)
+Event.register('on_init', function(event)
 	modular_information_enable_submodule("modular_information_stats")
 end)
 

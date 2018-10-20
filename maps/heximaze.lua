@@ -530,4 +530,4 @@ function hexi.on_chunk_generated(event)
 end
 
 Event.register(defines.events.on_chunk_generated, hexi.on_chunk_generated)
-Event.register(-1, hexi.init)
+Event.register('on_init', hexi.init)

@@ -81,4 +81,4 @@ function votekick.kick(name)
     game.ban_player(player, "Votekicked")
 end
 
---Event.register(-1, votekick.init)
+--Event.register('on_init', votekick.init)

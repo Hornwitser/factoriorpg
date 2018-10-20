@@ -230,10 +230,10 @@ function pdnc_debug_message(s)
 	end
 end	
 	
-script.on_nth_tick(global.pdnc_stepsize, pdnc_core)
-script.on_init(pdnc_setup)
-script.on_load(pdnc_on_load)
---script.on_rocket_launched(pdnc_rocket_launch_counter)
-script.on_event(defines.events.on_rocket_launched, function(event)
-  pdnc_rocket_launch_counter()
-end)
+-- script.on_nth_tick(global.pdnc_stepsize, pdnc_core)
+-- script.on_init(pdnc_setup)
+-- script.on_load(pdnc_on_load)
+-- --script.on_rocket_launched(pdnc_rocket_launch_counter)
+-- script.on_event(defines.events.on_rocket_launched, function(event)
+--   pdnc_rocket_launch_counter()
+-- end)
