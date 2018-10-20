@@ -29,7 +29,7 @@ end
 function diversify(event)
 	local ores = event.surface.find_entities_filtered{type="resource", area=event.area}
 	for k,v in pairs(ores) do
-		if math.abs(v.position.x) > global.EXEMPT_AREA or math.abs(v.position.y) > global.EXEMPT_AREA then
+		if math.abs(v.position.x) > EXEMPT_AREA or math.abs(v.position.y) > EXEMPT_AREA then
 			if v.prototype.resource_category == "basic-solid" then
 				local random = math.random()
 				if v.name == "stone" and global.STONE_BYPRODUCT then
