@@ -135,6 +135,5 @@ script.on_configuration_changed(function()
 	end
 end)
 
-script.on_nth_tick(108000, cleanDirt) --30 minutes
---script.on_nth_tick(300, function() game.write_file("dirtdump", serpent.block(global.dirt)) end)
-script.on_event(defines.events.on_player_changed_position, function(event) dirtDirt(event) end)
+Event.register(-108000, cleanDirt) --30 minutes
+Event.register(defines.events.on_player_changed_position, dirtDirt)

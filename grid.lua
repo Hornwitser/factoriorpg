@@ -50,7 +50,7 @@ Event.register(defines.events.on_player_created, function(event)
 	local p = game.players[event.player_index]
 	p.teleport({x = math.floor(global.grid.size/2), y = math.floor(global.grid.size/2)})
 end)
--- Event.register(-1, function(event)
+-- Event.register('on_init', function(event)
 	-- --global.grid_module.seed = normalize(os.time())
 	-- randomseed(global.grid_module.seed)
 -- end)

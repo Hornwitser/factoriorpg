@@ -55,7 +55,7 @@ end)
 -- 	end
 -- end)
 
-Event.register(-1, function(event)
+Event.register('on_init', function(event)
 	global.void_module.seed = normalize(os.time())
 	randomseed(global.void_module.seed)
 end)

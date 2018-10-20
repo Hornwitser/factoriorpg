@@ -2,6 +2,7 @@
 STARTING_RADIUS = 80
 EASY_ORE_RADIUS = 120
 V_SCALE_FACTOR = 3.0
+EASY_MODE = false
 DANGORE_MODE = "pie" -- random, pie, spiral, voronoi, or perlin
 
 --dangOreus, a scenario by Mylon
@@ -287,7 +288,7 @@ function dangOre(event)
     if event.created_entity.type == "locomotive" or event.created_entity.type == "fluid-wagon" or event.created_entity.type == "cargo-wagon" then
         return
     end
-    if settings.global["easy mode"].value then --Dificulty setting
+    if EASY_MODE then --Dificulty setting
 		if event.created_entity.type == "transport-belt" or
 		event.created_entity.type == "underground-belt" or
 		event.created_entity.type == "splitter" or
@@ -355,9 +356,6 @@ end
 
 --Limit exploring
 function flOre_is_lava(event)
-    if not (event.tick % (300) == 31) then
-        return
-    end
     for n, p in pairs(game.connected_players) do
         if not p.character then --Spectator or admin
             return
@@ -632,6 +630,7 @@ function divOresity_init()
     --/c game.print(game.entity_prototypes["copper-ore"].autoplace_specification.coverage/game.entity_prototypes["zinc-ore"].autoplace_specification.coverage)
 end
 
+Event.register(-300, flOre_is_lava)
 Event.register(defines.events.on_built_entity, dangOre)
 Event.register(defines.events.on_robot_built_entity, dangOre)
 Event.register(defines.events.on_chunk_generated, gOre)
