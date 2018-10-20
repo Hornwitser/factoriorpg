@@ -31,6 +31,8 @@ function grid_ore_place_ore_in_grid_chunck(location, ore)
 	yoffset = (math.floor(location.y/global.grid.size))*global.grid.size
 	for y=global.grid.y_border_width,global.grid.size-1 do
 		for x=global.grid.x_border_width,global.grid.size-1 do
+			local distance_factor = ((x+xoffset)^2 + (y+yoffset)^2) ^ 0.8
+			local amount = math.random(global.grid_ore.ore_random_addition_amount)+global.grid_ore.ore_start_amount + distance_factor
 			game.surfaces["nauvis"].create_entity({name=ore, amount=math.random(global.grid_ore.ore_random_addition_amount)+global.grid_ore.ore_start_amount, position={x+xoffset, y+yoffset}})
 		end
 	end
