@@ -2,7 +2,6 @@
 require "mod-gui" --Klonan's button prettifier
 Event = require "lib/event"
 require "utils/topgui" --Allows reordering guis.
-require "mod-gui" --required for all other modules
 require "utils/bot" --Discord integration
 require "utils/antigrief" --Look for suspicious behavior and report it to admins/log it.
 require "utils/modular_admin/modular_admin" --FMMO admin tools 
