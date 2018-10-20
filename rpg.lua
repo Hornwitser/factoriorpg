@@ -1,6 +1,7 @@
 --Factorio RPG, written by Mylon
---How to save data:
--- /c rpg_savedata() 
+
+--Offline testing:
+--/c script.raise_event(rpg.on_rpg_gui_created, {player_index=1})
 
 --Utility command for griefing.
 -- /silent-command do local hoarder = {amount=0} for k,v in pairs(game.players) do if v.get_item_count("uranium-235") > hoarder.amount then hoarder.name = v.name hoarder.amount = v.get_item_count("uranium-235") end end game.print(hoarder.name .. " is hoarding " .. hoarder.amount .. " uranium-235!") end
