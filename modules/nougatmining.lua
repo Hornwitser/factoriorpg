@@ -285,23 +285,18 @@ commands.add_command("nougat", "Toggle nougat mining", function()
     end
 end)
 
--- script.on_nth_tick(60, nougat.chewy)
--- script.on_init(function(event) nougat.bake() end)
--- script.on_event(defines.events.on_robot_built_entity, function(event) nougat.register(event) end)
--- script.on_event(defines.events.on_built_entity, function(event) nougat.register(event) end)
--- script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
--- 	if event.setting == "use construction range" then
--- 		global.nougat = {roboports = {}, index=1, easy_ores={}, networks={}, optout={}}
--- 		global.nougat.pollution = 9 * 0.9
--- 		for _, surface in pairs(game.surfaces) do
--- 			for __, roboport in pairs(surface.find_entities_filtered{type="roboport"}) do
--- 				nougat.register({created_entity=roboport})
--- 			end
--- 		end
--- 	end
--- end)
-
-Event.register('on_init', nougat.bake)
-Event.register(-60, nougat.chewy)
-Event.register(defines.events.on_robot_built_entity, nougat.register)
-Event.register(defines.events.on_built_entity, nougat.register)
+script.on_nth_tick(60, nougat.chewy)
+script.on_init(function(event) nougat.bake() end)
+script.on_event(defines.events.on_robot_built_entity, function(event) nougat.register(event) end)
+script.on_event(defines.events.on_built_entity, function(event) nougat.register(event) end)
+script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
+	if event.setting == "use construction range" then
+		global.nougat = {roboports = {}, index=1, easy_ores={}, networks={}, optout={}}
+		global.nougat.pollution = 9 * 0.9
+		for _, surface in pairs(game.surfaces) do
+			for __, roboport in pairs(surface.find_entities_filtered{type="roboport"}) do
+				nougat.register({created_entity=roboport})
+			end
+		end
+	end
+end)
