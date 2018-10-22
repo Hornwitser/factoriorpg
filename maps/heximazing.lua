@@ -49,7 +49,7 @@ function hexi.radars(event)
     end
 end
 
---Event.register(-1, hexi.init)
+--Event.register('on_init', hexi.init)
 Event.register(defines.events.on_built_entity, hexi.radars)
 Event.register(defines.events.on_robot_built_entity, hexi.radars)
 --Event.register(defines.events.on_research_started, hexi.nologistics)

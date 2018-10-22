@@ -15,7 +15,7 @@
 --
 
 global.modular_admin_ghosts = global.modular_admin_ghosts or {}
-global.modular_admin_ghosts.enabled = false
+global.modular_admin_ghosts.enabled = true
 global.modular_admin_ghosts.force_charting_enabled = true
 
 --

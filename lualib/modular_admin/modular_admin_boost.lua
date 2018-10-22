@@ -149,10 +149,15 @@ function modular_admin_boost_gui_clicked(event)
 	local p = game.players[i]
 	local e = event.element
 	if e ~= nil then
+		if e.parent then
+			
+		else	
+			print("output$" .. e.name .. " has no parent! Is this a top-level GUI?")
+		end
 		if e.name == "modular_admin_boost_button" then
 			global.modular_admin_boost.visible[p.name] = (not global.modular_admin_boost.visible[p.name])
 			modular_admin_boost_update_menu_button(p)
-		elseif e.parent and (e.parent.name == "modular_admin_boost_pane" or e.parent.name == "modular_admin_boost_walking_table" or e.parent.name == "modular_admin_boost_flow") then
+		elseif e.parent.name == "modular_admin_boost_pane" or e.parent.name == "modular_admin_boost_walking_table" or e.parent.name == "modular_admin_boost_flow" then
 			if e.name == "modular_admin_boost_pickup_button" then
 				if global.modular_admin_boost.bonus_state[p.name].pickup then
 					global.modular_admin_boost.bonus_state[p.name].pickup = false

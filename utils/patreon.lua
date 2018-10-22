@@ -184,7 +184,7 @@ function patreon_reveal(event)
 	end
 end
 
-Event.register(-1, function()
+Event.register('on_init', function()
 	if not game.forces.Patreons then
 		game.create_force("Patreons")
 	end

@@ -1,11 +1,11 @@
 --Heavy lifting stuff here.
 require "mod-gui" --Klonan's button prettifier
-Event = require('lib/event') --This is so all of the modules play nice with each other.
+Event = require "lib/event"
 require "utils/topgui" --Allows reordering guis.
 require "utils/bot" --Discord integration
 require "utils/antigrief" --Look for suspicious behavior and report it to admins/log it.
---require "utils/modular_admin/modular_admin" --FMMO admin tools 
---require "utils/modular_information/modular_information" --Info windows from FMMO
+require "utils/modular_admin/modular_admin" --FMMO admin tools 
+require "utils/modular_information/modular_information" --Info windows from FMMO
 require "modules/module_list" --Creates and displays a list of active modules on login.
 require "rpg" --Award bonuses based on experience earned.
 --require "permissions" --Permission manager
@@ -21,8 +21,8 @@ require "rpg" --Award bonuses based on experience earned.
 require "modules/gravemarker" --Mark player death locations on map for corpse runs.
 require "modules/bluebuild" --Bluebuild softmod
 require "modules/autofill" --Softmod autofill separated from Oarc
-require "modules/nougatmining" --Logistic mining softmod.
---require "modules/peppermintmining" --Logistic mining softmod.
+--require "modules/nougatmining" --Logistic mining softmod.
+require "modules/peppermintmining" --Logistic mining softmod.
 require "modules/bpmirror" --Adds bpmirror command to flip BPs.
 require "modules/votekick" --Allows users to kick other users.
 require "modules/playerlist" --List of online players
@@ -50,22 +50,15 @@ require "modules/piety" --Way to consume excess stone.
 -- World Generators: Most are exclusive.
 --require "maps/prospector" --Radars generate ore
 --require "maps/TTSFN" --This Tank Stops for Nobody!
-require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
---require "modules/divOresity" --Some ore gets scrambled and must be filtered. Must be called after dangOreus if using perlin mode.
+--require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
+require "maps/grid" --Generate a void grid.
+require "modules/divOresity" --Some ore gets scrambled and must be filtered. Must be called after dangOreus if using perlin mode.
 --require "maps/searious" --Everything not a resource tile is turned into water.
 --require "oarc_events" --Oarc's separate spawn scenario.
 --require "maps/heximaze" --A labyrinth.
 --require "maps/perlinvoid" --Organic void shapes.
 --require "void" --Worldgenerator which randomly generates holes in the world
 --require "nuclear" --worldgenerator for nuclear scenario
---NOT UPDATED require "grid" --Worldgenerator which devides the world into a grid.
-
-
--- FOLLOWING CODE GIVES SAME MINIMUM INVENTORY TO ALL SCENARIOS:
-
-local function ticks_from_minutes(minutes)
-	return minutes * 60 * 60
-end
 
 -- Give player starting items.
 -- @param event on_player_joined event
@@ -85,30 +78,13 @@ function player_joined(event)
     end
 end
 
--- Give player weapons after they respawn.
--- @param event on_player_respawned event
-function player_respawned(event)
-	local player = game.players[event.player_index]
+--require "lualib/pdnc" --Zr's fancy day-night cycle stuff
+-- require "wg_jungle" --Jungle World Generator, generates a world full of trees!
 
-	if (player.force.technologies["military"].researched) then
-        player.insert { name = "submachine-gun", count = 1 }
-    else
-		player.insert { name = "pistol", count = 1 }
-    end
-
-	if (player.force.technologies["uranium-ammo"].researched) then
-        player.insert { name = "uranium-rounds-magazine", count = 10 }
-    else 
-		if (player.force.technologies["military-2"].researched) then
-			player.insert { name = "piercing-rounds-magazine", count = 10 }
-		else
-			player.insert { name = "firearm-magazine", count = 10 }
-		end
-	end
-end
+--require "debug"
 
 Event.register(defines.events.on_player_created, player_joined)
-Event.register(defines.events.on_player_respawned, player_respawned)
+--Event.register(defines.events.on_player_respawned, player_respawned)
 
 --Time for the debug code.  If any (not global.) globals are written to at this point, an error will be thrown.
 --eg, x = 2 will throw an error because it's not global.x or local x

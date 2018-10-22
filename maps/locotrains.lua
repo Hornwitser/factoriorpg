@@ -113,7 +113,7 @@ function loco_init()
 
 end
 
-Event.register(-1, loco_init)
+Event.register('on_init', loco_init)
 Event.register(defines.events.on_tick, loose_wheel)
 Event.register(defines.events.on_entity_died, test_loco)
 Event.register(defines.events.on_chunk_generated, draw_locos)

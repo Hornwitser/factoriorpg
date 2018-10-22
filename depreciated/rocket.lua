@@ -51,39 +51,6 @@ end
 	-- end
 -- end)
 
---Function for when an admin uses the dummy-selection-tool to make a silo destructable again.
--- Event.register(defines.events.on_player_selected_area, function(event)
-	-- local index = event.player_index
-	-- local player = game.players[index]
-	-- for i, entity in pairs(event.entities) do
-	    -- if entity.name == "rocket-silo" and player.admin then
-			-- if entity.minable == false then
-				-- entity.destructible = true
-				-- entity.operable = true
-				-- entity.minable = true
-				-- return
-			-- else
-				-- entity.destructible = false
-				-- entity.operable = false
-				-- entity.minable = false
-			-- end
-	   -- end
-	-- end
-	
--- end)
-
---Debug function to instantly end the game. 
--- Event.register(defines.events.on_player_alt_selected_area, function(event)
-	-- local index = event.player_index
-	-- local player = game.players[index]
-	-- for i, entity in pairs(event.entities) do
-	    -- if entity.name == "rocket-silo" and player.admin and player.name == "I_IBlackI_I" then
-			-- game.set_game_state{game_finished=true, player_won=true, can_continue=true}
-			-- global.satellite_sent[game.forces.player.name] = 1
-	   -- end
-	-- end
-	
--- end)
 
 -- Functions for adding the silo to the table, or remove them. 
 local function rocket_on_creation(event)
@@ -130,11 +97,6 @@ end
 
 function rocket_create_button(player_name)
 	local player = game.players[player_name]
-	-- if player.admin then
-		-- if not mod_gui.get_button_flow(player).rocket then
-			-- mod_gui.get_button_flow(player).add { name = "rocket", type = "button", caption = "Rocket Tool" }
-		-- end
-	-- end
 	if not mod_gui.get_button_flow(player).rocket_stats then
 		mod_gui.get_button_flow(player).add { name = "rocket_stats", type = "button", caption = "Open Stats" }
 	end
@@ -147,9 +109,6 @@ function rocket_on_gui_click(event)
 	local e = event.element
 	
 	if e ~= nil then
-		-- if (e.name == "rocket") then
-			-- p.insert { name = "dummy-selection-tool", count = 1 }
-		-- elseif REPLACE IF WITH ELSEIF
 		if e.name == "rocket_stats" and e.caption == "Open Stats" then
 			e.caption = "Close Stats"
 			if mod_gui.get_frame_flow(p).rocket_score then
@@ -172,7 +131,7 @@ end
 
 Event.register(defines.events.on_entity_died, rocket_on_destruction)
 Event.register(defines.events.on_robot_pre_mined, rocket_on_destruction)
-Event.register(defines.events.on_preplayer_mined_item, rocket_on_destruction)
+Event.register(defines.events.on_pre_player_mined_item, rocket_on_destruction)
 Event.register(defines.events.on_built_entity, rocket_on_creation)
 Event.register(defines.events.on_robot_built_entity, rocket_on_creation)
 Event.register(defines.events.on_rocket_launched, rocket_launched)
