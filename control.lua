@@ -21,8 +21,8 @@ require "rpg" --Award bonuses based on experience earned.
 require "modules/gravemarker" --Mark player death locations on map for corpse runs.
 require "modules/bluebuild" --Bluebuild softmod
 require "modules/autofill" --Softmod autofill separated from Oarc
---require "modules/nougatmining" --Logistic mining softmod.
-require "modules/peppermintmining" --Logistic mining softmod.
+require "modules/nougatmining" --Logistic mining softmod.
+--require "modules/peppermintmining" --Logistic mining softmod.
 require "modules/bpmirror" --Adds bpmirror command to flip BPs.
 require "modules/votekick" --Allows users to kick other users.
 require "modules/playerlist" --List of online players
@@ -51,7 +51,7 @@ require "modules/piety" --Way to consume excess stone.
 --require "maps/prospector" --Radars generate ore
 --require "maps/TTSFN" --This Tank Stops for Nobody!
 --require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
-require "maps/grid" --Generate a void grid.
+--require "maps/grid" --Generate a void grid.
 require "modules/divOresity" --Some ore gets scrambled and must be filtered. Must be called after dangOreus if using perlin mode.
 --require "maps/searious" --Everything not a resource tile is turned into water.
 --require "oarc_events" --Oarc's separate spawn scenario.
