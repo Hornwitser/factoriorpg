@@ -30,7 +30,9 @@ function mass_power.feed()
             table.remove(global.mass_power.food_sources, i)
         else
             for item, count in pairs(ent.get_inventory(1).get_contents()) do
-                food_value = food_value + global.mass_power.food_values[item] * count * global.mass_power.FOOD_SCALE
+                if global.mass_power.food_values[item] then
+                    food_value = food_value + global.mass_power.food_values[item] * count * global.mass_power.FOOD_SCALE
+                end
             end
             ent.get_inventory(1).clear()
         end
@@ -44,7 +46,7 @@ function mass_power.acquire(event)
     if not(event.created_entity.type == "solar-panel" or event.created_entity.type == "generator") then
         return
     end
-    table.insert(global.mass_power.targets, event.created_entity)
+    table.insert(global.mass_power.targets, {entity=event.created_entity, retries=0})
 end
 
 --Add nearby containers to a list for consumption.
@@ -66,9 +68,14 @@ function mass_power.checker(event)
         if global.mass_power.target_index + i > #global.mass_power.targets then
             global.mass_power.target_index = 1
         end
-        local entity = global.mass_power.targets[global.mass_power.target_index + i]
+        local entity = global.mass_power.targets[global.mass_power.target_index + i].entity
         if entity.valid then
-            mass_power.angry(entity)
+            if global.mass_power.targets[global.mass_power.target_index + i].retries > 5 then
+                mass_power.angry(entity, true)
+            else
+                mass_power.angry(entity)
+            end
+            global.mass_power.targets[global.mass_power.target_index + i].retries = global.mass_power.targets[global.mass_power.target_index + i].retries + 1
         else
             table.remove(global.mass_power.targets, global.mass_power.target_index + i)
         end
@@ -76,9 +83,17 @@ function mass_power.checker(event)
     end
 end
 
-function mass_power.angry(entity)
+function mass_power.angry(entity, very_angry)
     local eei = global.mass_power.eei
-    eei.surface.create_entity{name="rocket", force="enemy", position=eei.position, target=entity, speed=0.1}
+    --log("Angry!")
+    if very_angry then
+        --log("Very angry!")
+        eei.surface.create_entity{name="grenade", force="enemy", position=entity.position, target=entity, speed=0.1}
+        eei.surface.create_entity{name="grenade", force="enemy", position=entity.position, target=entity, speed=0.1}
+    else
+        eei.surface.create_entity{name="rocket", force="enemy", position=eei.position, target=entity, speed=0.1}
+    end
+    --Target might be out of range, so let's force the issue.
 end
 
 Event.register('on_init', mass_power.init)
