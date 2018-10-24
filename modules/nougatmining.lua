@@ -20,7 +20,6 @@ nougat.TARGET_RATIO = 0.10 --Aim to keep this proportion of construction bots fr
 nougat.DEFAULT_RATIO = 0.5 --The ratio of choclate to chew.  Err, I mean how many bots we assign to mining.  Starts here, changes later based on bot availability.
 nougat.MAX_ITEMS = 300 --Spawning more than this gets really laggy.
 nougat.USE_CARGO_COUNT = false --Turning this on is ridiculously OP.
---nougat.OPT_IN = true --Do players have to turn it on manually?
 global.nougat = {roboports = {}, index=1, easy_ores={}, networks={}, toggle = {}} --Networks is of format {network=network, ratio=ratio}
 
 function nougat.bake()
@@ -46,13 +45,6 @@ end
 function nougat.register(event)
     --game.print("Built something!")
     if (event.created_entity and event.created_entity.valid and event.created_entity.type == "roboport") then
-        --Check opt-out status
-        if event.created_entity.last_user then
-            if not (nougat.OPT_IN and global.nougat.toggle[event.created_entity.last_user.index])
-            or (nougat.OPT_IN and not global.nougat.toggle[event.created_entity.last_user.index]) then
-                return
-            end
-        end
         --game.print("Built a roboport.")
         if event.created_entity.logistic_cell and event.created_entity.logistic_cell.valid then
             local roboport = event.created_entity
@@ -114,8 +106,8 @@ function nougat.chewy(event, assigned)
         return
     end
     local area = {{roboport.position.x - radius, roboport.position.y - radius}, {roboport.position.x + radius-1, roboport.position.y + radius-1}}
-    local ores = roboport.surface.find_entities_filtered{name=global.nougat.easy_ores, limit=1, area=area}
-    if #ores == 0 then
+    local ore = roboport.surface.find_entities_filtered{name=global.nougat.easy_ores, limit=1, area=area}[1]
+    if not ore and ore.valid then
         --If we're still here, there must be nothing left to mine.
         table.remove(global.nougat.roboports, index)
         return
@@ -137,7 +129,6 @@ function nougat.chewy(event, assigned)
 
     --Finally, let's do some mining.
     --game.print("Time to mine.")
-    local ore = ores[math.random(1,#ores)]
     local position = ore.position --Just in case we kill the ore.
     local surface = roboport.surface
     local productivity = force.mining_drill_productivity_bonus + 1
@@ -146,7 +137,7 @@ function nougat.chewy(event, assigned)
         cargo_multiplier = force.worker_robots_storage_bonus + 1
     end
     local products = {}
-    
+
     count = math.min(math.ceil(ore.amount / cargo_multiplier), nougat.MAX_ITEMS, count)
     
     for k,v in pairs(ore.prototype.mineable_properties.products) do
@@ -252,7 +243,6 @@ function nougat.oompa_loompa(network)
     end
 
     local count = math.floor(network.available_construction_robots * data.ratio)
-    log(serpent.line(data))
     if network.available_construction_robots > network.all_construction_robots - data.jobs_created_last_tick then --Scale back.  Jobs aren't being assigned fast enough
         count = 0
         data.jobs_created_last_tick = data.jobs_created_last_tick * 0.9
@@ -263,24 +253,14 @@ function nougat.oompa_loompa(network)
     return math.floor(network.available_construction_robots * data.ratio)
 end
 
-commands.add_command("nougat", "Toggle nougat mining", function()
-    if not game.player and game.player.admin then return end
-    settings.global["enabled"].value = not settings.global["enabled"].value
-    if settings.global["enabled"].value then
-        game.player.print("Nougat Mining turned on.")
-    else
-        game.player.print("Nougat Mining turned off.")
-    end
-end)
-
 script.on_nth_tick(60, nougat.chewy)
 script.on_init(function(event) nougat.bake() end)
 script.on_event(defines.events.on_robot_built_entity, function(event) nougat.register(event) end)
 script.on_event(defines.events.on_built_entity, function(event) nougat.register(event) end)
 script.on_event(defines.events.on_runtime_mod_setting_changed, function(event)
 	if event.setting == "use construction range" then
-		global.nougat = {roboports = {}, index=1, easy_ores={}, networks={}, optout={}}
-		global.nougat.pollution = 9 * 0.9
+		global.nougat.roboports = {}
+		--global.nougat.pollution = 9 * 0.9
 		for _, surface in pairs(game.surfaces) do
 			for __, roboport in pairs(surface.find_entities_filtered{type="roboport"}) do
 				nougat.register({created_entity=roboport})
