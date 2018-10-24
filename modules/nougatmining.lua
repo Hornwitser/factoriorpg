@@ -20,7 +20,7 @@ nougat.TARGET_RATIO = 0.10 --Aim to keep this proportion of construction bots fr
 nougat.DEFAULT_RATIO = 0.5 --The ratio of choclate to chew.  Err, I mean how many bots we assign to mining.  Starts here, changes later based on bot availability.
 nougat.MAX_ITEMS = 300 --Spawning more than this gets really laggy.
 nougat.USE_CARGO_COUNT = false --Turning this on is ridiculously OP.
-nougat.OPT_IN = true --Do players have to turn it on manually?
+--nougat.OPT_IN = true --Do players have to turn it on manually?
 global.nougat = {roboports = {}, index=1, easy_ores={}, networks={}, toggle = {}} --Networks is of format {network=network, ratio=ratio}
 
 function nougat.bake()
@@ -84,6 +84,7 @@ function nougat.register(event)
 end
 
 function nougat.chewy(event, assigned)
+    if not settings.global["enabled"].value then return end
     if (#global.nougat.roboports == 0) then
         return
     end
@@ -215,7 +216,7 @@ end
 function nougat.how_many_licks(entity)
     local radius
     if entity and entity.valid and entity.logistic_cell then
-        if nougat.LOGISTIC_RADIUS then
+        if not settings.global["use construction range"].value then
             radius = entity.logistic_cell.logistic_radius
         else
             radius = entity.logistic_cell.construction_radius
@@ -263,20 +264,13 @@ function nougat.oompa_loompa(network)
 end
 
 commands.add_command("nougat", "Toggle nougat mining", function()
-    if (global.nougat.toggle[game.player.index] and not nougat.OPT_IN)
-    or (nougat.OPT_IN and not global.nougat.toggle[game.player.index]) then
+    if not game.player and game.player.admin then return end
+    settings.global["enabled"].value = not settings.global["enabled"].value
+    if settings.global["enabled"].value then
         game.player.print("Nougat Mining turned on.")
     else
-        global.nougat.toggle[game.player.index] = true
         game.player.print("Nougat Mining turned off.")
-        for i = #global.nougat.roboports, 1, -1 do
-            local v = global.nougat.roboports[i]
-            if v and v.valid and v.last_user == game.player then
-                table.remove(global.nougat.roboports, i)
-            end
-        end
     end
-    global.nougat.toggle[game.player.index] = not global.nougat.toggle[game.player.index]
 end)
 
 script.on_nth_tick(60, nougat.chewy)
