@@ -130,7 +130,7 @@ function gOre(event)
     for x = event.area.left_top.x, event.area.left_top.x + 31 do
         for y = event.area.left_top.y, event.area.left_top.y + 31 do
             local bbox = {{ x, y}, {x+0.5, y+0.5}}
-            if event.surface.get_tile(x,y).collides_with("ground-tile") and event.surface.count_entities_filtered{type="cliff", area=bbox} == 0 then
+            if not event.surface.get_tile(x,y).collides_with("water-tile") and event.surface.count_entities_filtered{type="cliff", area=bbox} == 0 then
                 local amount = (x^2 + y^2)^ORE_SCALING / LINEAR_SCALAR
                 if x^2 + y^2 >= global.STARTING_RADIUS^2 then
 
