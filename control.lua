@@ -5,7 +5,7 @@ require "utils/topgui" --Allows reordering guis.
 require "utils/bot" --Discord integration
 require "utils/antigrief" --Look for suspicious behavior and report it to admins/log it.
 require "utils/modular_admin/modular_admin" --FMMO admin tools 
-require "utils/modular_information/modular_information" --Info windows from FMMO
+--require "utils/modular_information/modular_information" --Info windows from FMMO
 require "modules/module_list" --Creates and displays a list of active modules on login.
 require "rpg" --Award bonuses based on experience earned.
 --require "permissions" --Permission manager
@@ -21,8 +21,8 @@ require "rpg" --Award bonuses based on experience earned.
 require "modules/gravemarker" --Mark player death locations on map for corpse runs.
 require "modules/bluebuild" --Bluebuild softmod
 require "modules/autofill" --Softmod autofill separated from Oarc
---require "modules/nougatmining" --Logistic mining softmod.
-require "modules/peppermintmining" --Logistic mining softmod.
+require "modules/nougatmining" --Logistic mining softmod.
+--require "modules/peppermintmining" --Logistic mining softmod.
 require "modules/bpmirror" --Adds bpmirror command to flip BPs.
 require "modules/votekick" --Allows users to kick other users.
 require "modules/playerlist" --List of online players
@@ -46,12 +46,13 @@ require "modules/piety" --Way to consume excess stone.
 --require "modules/lazybastard" --Much slower crafting speed
 --require "modules/regional" --Regional Crafting, goods must be produced near matching region markers
 --require "rpg_pocket_crafter" --Pocket crafting!
+require "modules/masspower" --Better than mass to energy, this is mass to power!
 
 -- World Generators: Most are exclusive.
 --require "maps/prospector" --Radars generate ore
 --require "maps/TTSFN" --This Tank Stops for Nobody!
 --require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
-require "maps/grid" --Generate a void grid.
+--require "maps/grid" --Generate a void grid.
 require "modules/divOresity" --Some ore gets scrambled and must be filtered. Must be called after dangOreus if using perlin mode.
 --require "maps/searious" --Everything not a resource tile is turned into water.
 --require "oarc_events" --Oarc's separate spawn scenario.
