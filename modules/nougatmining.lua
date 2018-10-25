@@ -107,7 +107,7 @@ function nougat.chewy(event, assigned)
     end
     local area = {{roboport.position.x - radius, roboport.position.y - radius}, {roboport.position.x + radius-1, roboport.position.y + radius-1}}
     local ore = roboport.surface.find_entities_filtered{name=global.nougat.easy_ores, limit=1, area=area}[1]
-    if not ore and ore.valid then
+    if not (ore and ore.valid) then
         --If we're still here, there must be nothing left to mine.
         table.remove(global.nougat.roboports, index)
         return
