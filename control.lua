@@ -46,7 +46,7 @@ require "modules/piety" --Way to consume excess stone.
 --require "modules/lazybastard" --Much slower crafting speed
 --require "modules/regional" --Regional Crafting, goods must be produced near matching region markers
 --require "rpg_pocket_crafter" --Pocket crafting!
-require "modules/masspower" --Better than mass to energy, this is mass to power!
+--require "modules/masspower" --Better than mass to energy, this is mass to power!
 
 -- World Generators: Most are exclusive.
 --require "maps/prospector" --Radars generate ore
@@ -54,6 +54,7 @@ require "modules/masspower" --Better than mass to energy, this is mass to power!
 --require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
 --require "maps/grid" --Generate a void grid.
 require "modules/divOresity" --Some ore gets scrambled and must be filtered. Must be called after dangOreus if using perlin mode.
+require "maps/digdug" -- My version of diggy
 --require "maps/searious" --Everything not a resource tile is turned into water.
 --require "oarc_events" --Oarc's separate spawn scenario.
 --require "maps/heximaze" --A labyrinth.
