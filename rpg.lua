@@ -959,7 +959,7 @@ function rpg_bonus_scan(event)
 	local force = event.radar.force
 	for k,v in pairs(force.players) do
 		if v.connected then
-			if global.rpg_data[v.name].class == "Soldier" then
+			if global.rpg_data[v.name] and global.rpg_data[v.name].class == "Soldier" then
 				soldierbonus = soldierbonus + global.rpg_tmp[v.name].level
 			end
 		end
