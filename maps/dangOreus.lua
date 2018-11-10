@@ -367,13 +367,13 @@ function flOre_is_lava(event)
             local count = p.surface.count_entities_filtered{type="resource", area={{p.position.x-(10*distance), p.position.y-(10*distance)}, {p.position.x+(10*distance), p.position.y+(10*distance)}}}
             if count > (distance * 20) ^2 * 0.7 then
                 global.flOre[p.name] = distance + 1
+                local target = p.character
                 if p.vehicle then
-                    p.surface.create_entity{name="acid-projectile-purple", target=p.vehicle, position=p.vehicle.position, speed=10}
-                    p.vehicle.health = p.vehicle.health - 50 * distance
-                else
-                    p.surface.create_entity{name="acid-projectile-purple", target=p.character, position=p.character.position, speed=10}
-                    p.character.health = p.character.health - 20 * distance
+                    target = p.vehicle
                 end
+                p.surface.create_entity{name="acid-projectile-purple", target=target, position=target.position, speed=10}
+                target.health = target.health - 50 * distance
+                if target.health == 0 then target.die() end
             else
                 global.flOre[p.name] = distance - 1
                 if global.flOre[p.name] <= 0 then
