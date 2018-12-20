@@ -38,11 +38,11 @@ require "modules/nyan" --More silliness.
 -- require "modules/seasons" --Let's mess with solar. --Causes desyncs until 0.17
 --require "modules/dark harvest" --Only way to get uranium is from biter deaths.
 --require "modules/tOredumonde" --Ore spawns in directions. This must be called before divOresity. NOTE: STONE_BYPRODUCT must be false.
---require "modules/divOresity" --Some ore gets scrambled and must be filtered.
+require "modules/divOresity" --Some ore gets scrambled and must be filtered.
 require "modules/piety" --Way to consume excess stone.
 --require "belt_limit" --Limits number of belts per player.  Mostly for UPS reasons.
 --require "modules/infinity" --Infinite ore.  Almost.  Don't recommend with peppermint/Nougat
-require "modules/enhancedbiters" --Adds extra behavior to biters to make them extra nasty.
+--require "modules/enhancedbiters" --Adds extra behavior to biters to make them extra nasty.
 --require "modules/lazybastard" --Much slower crafting speed
 --require "modules/regional" --Regional Crafting, goods must be produced near matching region markers
 --require "rpg_pocket_crafter" --Pocket crafting!

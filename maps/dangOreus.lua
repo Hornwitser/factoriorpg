@@ -364,13 +364,10 @@ function flOre_is_lava()
             local count = p.surface.count_entities_filtered{type="resource", area={{p.position.x-(10*distance), p.position.y-(10*distance)}, {p.position.x+(10*distance), p.position.y+(10*distance)}}}
             if count > (distance * 20) ^2 * 0.7 then
                 global.flOre[p.name] = distance + 1
-                if p.vehicle then
-                    p.surface.create_entity{name="acid-projectile-purple", target=p.vehicle, position=p.vehicle.position, speed=10}
-                    p.vehicle.health = p.vehicle.health - 50 * distance
-                else
-                    p.surface.create_entity{name="acid-projectile-purple", target=p.character, position=p.character.position, speed=10}
-                    p.character.health = p.character.health - 20 * distance
-                end
+                local target = p.vehicle or p.character
+                p.surface.create_entity{name="acid-projectile-purple", target=target, position=target.position, speed=10}
+                target.health = target.health - 10 * distance
+                if target.health == 0 then target.die() end
             else
                 global.flOre[p.name] = distance - 1
                 if global.flOre[p.name] <= 0 then
@@ -631,19 +628,10 @@ function divOresity_init()
     --/c game.print(game.entity_prototypes["copper-ore"].autoplace_specification.coverage/game.entity_prototypes["zinc-ore"].autoplace_specification.coverage)
 end
 
-<<<<<<< HEAD
 script.on_event(defines.events.on_built_entity, function(event) dangOre(event) end)
 script.on_event(defines.events.on_robot_built_entity, function(event) dangOre(event) end)
 script.on_event(defines.events.on_chunk_generated, function(event) gOre(event) end)
 script.on_event(defines.events.on_entity_died, function(event) ore_rly(event) end)
-script.on_nth_tick(300, function() flOre_is_lava() end)
+script.on_nth_tick(120, function() flOre_is_lava() end)
 script.on_configuration_changed(function() divOresity_init() end)
 script.on_init(function(event) divOresity_init() perlin.shuffle() end)
-=======
-Event.register(-300, flOre_is_lava)
-Event.register(defines.events.on_built_entity, dangOre)
-Event.register(defines.events.on_robot_built_entity, dangOre)
-Event.register(defines.events.on_chunk_generated, gOre)
-Event.register(defines.events.on_entity_died, ore_rly)
-Event.register('on_init', divOresity_init)
->>>>>>> oarc-scenario
