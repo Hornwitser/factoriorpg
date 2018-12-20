@@ -367,12 +367,9 @@ function flOre_is_lava(event)
             local count = p.surface.count_entities_filtered{type="resource", area={{p.position.x-(10*distance), p.position.y-(10*distance)}, {p.position.x+(10*distance), p.position.y+(10*distance)}}}
             if count > (distance * 20) ^2 * 0.7 then
                 global.flOre[p.name] = distance + 1
-                local target = p.character
-                if p.vehicle then
-                    target = p.vehicle
-                end
+                local target = p.vehicle or p.character
                 p.surface.create_entity{name="acid-projectile-purple", target=target, position=target.position, speed=10}
-                target.health = target.health - 50 * distance
+                target.health = target.health - 10 * distance
                 if target.health == 0 then target.die() end
             else
                 global.flOre[p.name] = distance - 1
@@ -630,7 +627,7 @@ function divOresity_init()
     --/c game.print(game.entity_prototypes["copper-ore"].autoplace_specification.coverage/game.entity_prototypes["zinc-ore"].autoplace_specification.coverage)
 end
 
-Event.register(-300, flOre_is_lava)
+Event.register(-120, flOre_is_lava)
 Event.register(defines.events.on_built_entity, dangOre)
 Event.register(defines.events.on_robot_built_entity, dangOre)
 Event.register(defines.events.on_chunk_generated, gOre)
