@@ -45,11 +45,11 @@ function divOresity_init()
         	if not adding then adding = 3 end --failsafe
         	if adding > 0 then
 				local amount = adding * game.entity_prototypes[v.name].autoplace_specification.coverage
-				table.insert(diverse_ore_ranking_raw, {name=v.name, amount=amount})
-				diverse_ore_total = diverse_ore_total + amount
-				if game.entity_prototypes[v.name].mineable_properties.required_fluid then
-					table.insert(extra_diverse_ore_ranking_raw, {name=v.name, amount=amount})
-					extra_diverse_ore_total = extra_diverse_ore_total + amount
+				table.insert(extra_diverse_ore_ranking_raw, {name=v.name, amount=amount})
+				extra_diverse_ore_ranking_raw = extra_diverse_ore_ranking_raw + amount
+				if not game.entity_prototypes[v.name].mineable_properties.required_fluid then
+					table.insert(diverse_ore_ranking_raw, {name=v.name, amount=amount})
+					diverse_ore_total = diverse_ore_total + amount
 				end
             end
         end
