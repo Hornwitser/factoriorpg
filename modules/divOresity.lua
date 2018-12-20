@@ -61,7 +61,6 @@ function divOresity_init()
 
     --Calculate ore distribution from 0 to 1.
     local last_key = 0
-    --local ore_ranking_size = 0 --Essentially #ore_ranking_raw
     for k,v in pairs(diverse_ore_ranking_raw) do
         local key = last_key + v.amount / diverse_ore_total
         last_key = key
@@ -75,6 +74,7 @@ function divOresity_init()
         --According to this, at this stage, uranium should be 2% of all ore.
 	end
 
+	last_key = 0
 	for k,v in pairs(extra_diverse_ore_ranking_raw) do
         local key = last_key + v.amount / extra_diverse_ore_total
         last_key = key
