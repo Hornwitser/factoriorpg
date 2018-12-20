@@ -140,12 +140,12 @@ end
 function diversify(event)
 	local ores = event.surface.find_entities_filtered{type="resource", area=event.area}
 	for k,v in pairs(ores) do
-		if math.abs(v.position.x) > EXEMPT_AREA or math.abs(v.position.y) > EXEMPT_AREA then
+		if math.abs(v.position.x) > global.EXEMPT_AREA or math.abs(v.position.y) > global.EXEMPT_AREA then
 			if v.prototype.resource_category == "basic-solid" then
 				local random = math.random()
-				if v.name == "stone" and STONE_BYPRODUCT then
+				if v.name == "stone" and global.STONE_BYPRODUCT then
 					v.destroy()
-				elseif random < DIVERSITY_QUOTA then --Replace!
+				elseif random < global.DIVERSITY_QUOTA then --Replace!
 					local refugee
 					local correction_factor = 1
 					if v.prototype.mineable_properties.required_fluid and global.EXTRA_DIVORESITY then
@@ -156,7 +156,7 @@ function diversify(event)
 					correction_factor = richness_correction_factor(v.name, refugee)
 					event.surface.create_entity{name=refugee, position=v.position, amount=v.amount * correction_factor}
 					v.destroy()
-				elseif STONE_BYPRODUCT and random < STONE_BYPRODUCT_RATIO then --Replace with stone!
+				elseif global.STONE_BYPRODUCT and random < global.STONE_BYPRODUCT_RATIO then --Replace with stone!
 					event.surface.create_entity{name="stone", position=v.position, amount=v.amount}
 					v.destroy()
 				end
