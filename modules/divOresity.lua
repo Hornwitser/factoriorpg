@@ -28,7 +28,7 @@ function divOresity_init()
 			local autoplace = game.surfaces[1].map_gen_settings.autoplace_controls[v.name]
 			local adding
 			if autoplace then
-				if autoplace.frequency == "none" then
+				if autoplace.size == "none" then
 					adding = 0
 				elseif autoplace.frequency == "very-low" then
 					adding = 1
