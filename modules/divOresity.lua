@@ -118,7 +118,6 @@ function get_type(table)
 	return(table[#table][1])
 end
 
-
 function richness_correction_factor(old, new)
 	local old_richness = game.surfaces[1].map_gen_settings.autoplace_controls[old].richness
 	local new_richness = game.surfaces[1].map_gen_settings.autoplace_controls[new].richness
@@ -134,7 +133,7 @@ function richness_correction_factor(old, new)
 	end
 
 	--Debug
-	log(old_richness .. ":" .. convert(old_richness))
+	--log(old_richness .. ":" .. convert(old_richness))
 
 	return (convert(new_richness) / convert(old_richness))
 
