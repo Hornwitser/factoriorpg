@@ -117,9 +117,10 @@ function get_type(table)
 	return(table[#table][1])
 end
 
-function richness_correction_factor(old, new)
-	local old_richness = game.surfaces[1].map_gen_settings.autoplace_controls[old].richness
-	local new_richness = game.surfaces[1].map_gen_settings.autoplace_controls[new].richness
+function richness_correction_factor(surface, old, new)
+	local old_richness = game.surfaces[surface].map_gen_settings.autoplace_controls[old] and game.surfaces[surface].map_gen_settings.autoplace_controls[old].richness
+	local new_richness = game.surfaces[surface].map_gen_settings.autoplace_controls[new] and game.surfaces[surface].map_gen_settings.autoplace_controls[new].richness
+	if (old_richness == nil) or (new_richness == nil) then return 1 end
 
 	local function convert(text)
 		if text == "very-low" then return 1 end
@@ -153,7 +154,7 @@ function diversify(event)
 					else
 						refugee = get_type(global.diverse_ores)
 					end
-					correction_factor = richness_correction_factor(v.name, refugee)
+					correction_factor = richness_correction_factor(event.surface, v.name, refugee)
 					event.surface.create_entity{name=refugee, position=v.position, amount=v.amount * correction_factor}
 					v.destroy()
 				elseif global.STONE_BYPRODUCT and random < global.STONE_BYPRODUCT_RATIO then --Replace with stone!
