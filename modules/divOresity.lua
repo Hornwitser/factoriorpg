@@ -157,7 +157,7 @@ function diversify(event)
 					else
 						refugee = get_type(global.diverse_ores)
 					end
-					correction_factor = richness_correction_factor(event.surface, v.name, refugee)
+					correction_factor = richness_correction_factor(event.surface.name, v.name, refugee)
 					event.surface.create_entity{name=refugee, position=v.position, amount=v.amount * correction_factor}
 					v.destroy()
 				elseif STONE_BYPRODUCT and random < STONE_BYPRODUCT_RATIO then --Replace with stone!
