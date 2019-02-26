@@ -13,94 +13,113 @@ EXTRA_DIVORESITY = true
 --Build a table of potential ores to pick from.  Uranium is exempt from popping up randomly.
 function divOresity_init()
 	--Figure out the relative weight of ores.
-	global.diverse_ores = {}
-	global.extra_diverse_ores = {}
-	local diverse_ore_ranking_raw = {}
-	local extra_diverse_ore_ranking_raw = {}
-    local ore_ranking = {}
-	local diverse_ore_total = 0
-	local extra_diverse_ore_total = 0
-    
-	for k,v in pairs(game.entity_prototypes) do
-		if v.type == "resource"
-		and v.resource_category == "basic-solid"
-		and v.autoplace_specification then
-		
-			local autoplace = game.surfaces[1].map_gen_settings.autoplace_controls[v.name]
-			local adding
-			if autoplace then
-				if autoplace.size == "none" then
-					adding = 0
-				elseif autoplace.frequency == "very-low" then
-					adding = 1
-				elseif autoplace.frequency == "low" then
-					adding = 2
-				elseif autoplace.frequency == "normal" then
-					adding = 3
-				elseif autoplace.frequency == "high" then
-					adding = 4
-				elseif autoplace.frequency == "very-high" then
-					adding = 5
-				end
-			end
-        	if not adding then adding = 3 end --failsafe
-        	if adding > 0 then
-				local amount = adding * game.entity_prototypes[v.name].autoplace_specification.coverage
-				table.insert(extra_diverse_ore_ranking_raw, {name=v.name, amount=amount})
-				extra_diverse_ore_total = extra_diverse_ore_total + amount
-				if not game.entity_prototypes[v.name].mineable_properties.required_fluid then
-					table.insert(diverse_ore_ranking_raw, {name=v.name, amount=amount})
-					diverse_ore_total = diverse_ore_total + amount
-				end
-            end
-        end
-    end
-
-    --Debug
-    --log(serpent.block(diverse_ore_ranking_raw))
-
-    --Calculate ore distribution from 0 to 1.
-    local last_key = 0
-    for k,v in pairs(diverse_ore_ranking_raw) do
-        local key = last_key + v.amount / diverse_ore_total
-        last_key = key
-
-        --if key == 1 then key = 0.9999999 end
-        --ore_ranking[key] = v.name
-        table.insert(global.diverse_ores, {v.name, key})
-        --ore_ranking_size = ore_ranking_size + 1
-        --Debug
-        --log("Ore: " .. v.name .. " portion: " .. key)
-        --According to this, at this stage, uranium should be 2% of all ore.
-	end
-
-	last_key = 0
-	for k,v in pairs(extra_diverse_ore_ranking_raw) do
-        local key = last_key + v.amount / extra_diverse_ore_total
-        last_key = key
-
-        --if key == 1 then key = 0.9999999 end
-        --ore_ranking[key] = v.name
-        table.insert(global.extra_diverse_ores, {v.name, key})
-        --ore_ranking_size = ore_ranking_size + 1
-        --Debug
-        --log("Ore: " .. v.name .. " portion: " .. key)
-        --According to this, at this stage, uranium should be 2% of all ore.
-    end
-
+	-- Note: prototype.autoplace_specification.coverage no longer exists in 0.17!
 	-- global.diverse_ores = {}
 	-- global.extra_diverse_ores = {}
+	-- local diverse_ore_ranking_raw = {}
+	-- local extra_diverse_ore_ranking_raw = {}
+    -- local ore_ranking = {}
+	-- local diverse_ore_total = 0
+	-- local extra_diverse_ore_total = 0
+    
 	-- for k,v in pairs(game.entity_prototypes) do
 	-- 	if v.type == "resource"
 	-- 	and v.resource_category == "basic-solid"
 	-- 	and v.autoplace_specification then
-	-- 		table.insert(global.extra_diverse_ores, v.name)
-	-- 		if v.mineable_properties.required_fluid == nil then
-	-- 			table.insert(global.diverse_ores, v.name)
+		
+	-- 		local autoplace = game.surfaces[1].map_gen_settings.autoplace_controls[v.name]
+	-- 		local adding
+	-- 		if autoplace then
+	-- 			if autoplace.size == "none" then
+	-- 				adding = 0
+	-- 			elseif autoplace.frequency == "very-low" then
+	-- 				adding = 1
+	-- 			elseif autoplace.frequency == "low" then
+	-- 				adding = 2
+	-- 			elseif autoplace.frequency == "normal" then
+	-- 				adding = 3
+	-- 			elseif autoplace.frequency == "high" then
+	-- 				adding = 4
+	-- 			elseif autoplace.frequency == "very-high" then
+	-- 				adding = 5
+	-- 			end
 	-- 		end
-	-- 	end
+    --     	if not adding then adding = 3 end --failsafe
+    --     	if adding > 0 then
+	-- 			local amount = adding * game.entity_prototypes[v.name].autoplace_specification.coverage
+	-- 			table.insert(extra_diverse_ore_ranking_raw, {name=v.name, amount=amount})
+	-- 			extra_diverse_ore_total = extra_diverse_ore_total + amount
+	-- 			if not game.entity_prototypes[v.name].mineable_properties.required_fluid then
+	-- 				table.insert(diverse_ore_ranking_raw, {name=v.name, amount=amount})
+	-- 				diverse_ore_total = diverse_ore_total + amount
+	-- 			end
+    --         end
+    --     end
+    -- end
+
+    -- --Debug
+    -- --log(serpent.block(diverse_ore_ranking_raw))
+
+    -- --Calculate ore distribution from 0 to 1.
+    -- local last_key = 0
+    -- for k,v in pairs(diverse_ore_ranking_raw) do
+    --     local key = last_key + v.amount / diverse_ore_total
+    --     last_key = key
+
+    --     --if key == 1 then key = 0.9999999 end
+    --     --ore_ranking[key] = v.name
+    --     table.insert(global.diverse_ores, {v.name, key})
+    --     --ore_ranking_size = ore_ranking_size + 1
+    --     --Debug
+    --     --log("Ore: " .. v.name .. " portion: " .. key)
+    --     --According to this, at this stage, uranium should be 2% of all ore.
 	-- end
+
+	-- last_key = 0
+	-- for k,v in pairs(extra_diverse_ore_ranking_raw) do
+    --     local key = last_key + v.amount / extra_diverse_ore_total
+    --     last_key = key
+
+    --     --if key == 1 then key = 0.9999999 end
+    --     --ore_ranking[key] = v.name
+    --     table.insert(global.extra_diverse_ores, {v.name, key})
+    --     --ore_ranking_size = ore_ranking_size + 1
+    --     --Debug
+    --     --log("Ore: " .. v.name .. " portion: " .. key)
+    --     --According to this, at this stage, uranium should be 2% of all ore.
+    -- end
+
+	global.diverse_ores = {}
+	global.extra_diverse_ores = {}
+	for k,v in pairs(game.entity_prototypes) do
+		if v.type == "resource"
+		and v.resource_category == "basic-solid"
+		and v.autoplace_specification
+		and game.surfaces[1].map_gen_settings.autoplace_controls[k].size > 0 then
+			table.insert(global.extra_diverse_ores, v.name)
+			if v.mineable_properties.required_fluid == nil then
+				table.insert(global.diverse_ores, v.name)
+			end
+		end
+	end
 end
+
+-- Old 0.16 method
+-- function get_type(table)
+-- 	if #table == 0 then
+-- 		--Something went wrong!
+-- 		log("No ores to choose from.")
+-- 		return
+-- 	end
+-- 	local random = math.random()
+-- 	for _, ore in pairs(table) do
+-- 		if ore[2] > random then
+-- 			return ore[1]
+-- 		end
+-- 	end
+-- 	--Still here?  Return the last entry in the table
+-- 	return(table[#table][1])
+-- end
 
 function get_type(table)
 	if #table == 0 then
@@ -108,14 +127,7 @@ function get_type(table)
 		log("No ores to choose from.")
 		return
 	end
-	local random = math.random()
-	for _, ore in pairs(table) do
-		if ore[2] > random then
-			return ore[1]
-		end
-	end
-	--Still here?  Return the last entry in the table
-	return(table[#table][1])
+	return table[math.random(#table)]
 end
 
 function richness_correction_factor(surface, old, new)

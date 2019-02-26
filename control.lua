@@ -4,7 +4,7 @@ Event = require "lib/event"
 require "utils/topgui" --Allows reordering guis.
 require "utils/bot" --Discord integration
 require "utils/antigrief" --Look for suspicious behavior and report it to admins/log it.
-require "utils/modular_admin/modular_admin" --FMMO admin tools 
+--require "utils/modular_admin/modular_admin" --FMMO admin tools 
 --require "utils/modular_information/modular_information" --Info windows from FMMO
 require "modules/module_list" --Creates and displays a list of active modules on login.
 require "rpg" --Award bonuses based on experience earned.
@@ -72,12 +72,6 @@ function player_joined(event)
 		player.insert { name = "burner-mining-drill", count = 2 }
 		player.insert { name = "stone-furnace", count = 2 }
 	--end
-
-	if (player.force.technologies["steel-processing"].researched) then
-        player.insert { name = "steel-axe", count = 2 }
-    else
-        player.insert { name = "iron-axe", count = 5 }
-    end
 end
 
 --require "lualib/pdnc" --Zr's fancy day-night cycle stuff
