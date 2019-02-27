@@ -70,7 +70,6 @@ script.on_event(defines.events.on_player_created, function(event)
 		player.insert{name="copper-plate", count=200}
 		player.insert{name="coal", count=200}
 		player.insert{name="burner-mining-drill", count = 10}
-		player.insert{name="steel-axe", count=10}
 		player.insert{name="inserter", count=50}
 		player.insert{name="stone-furnace", count=10}
 		player.insert{name="assembling-machine-2", count=10}

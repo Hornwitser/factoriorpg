@@ -31,12 +31,6 @@ function player_joined(event)
 		player.insert { name = "burner-mining-drill", count = 2 }
 		player.insert { name = "stone-furnace", count = 2 }
 	end
-
-	if (player.force.technologies["steel-processing"].researched) then
-        player.insert { name = "steel-axe", count = 2 }
-    else
-        player.insert { name = "iron-axe", count = 5 }
-    end
 end
 
 -- Give player weapons after they respawn.
