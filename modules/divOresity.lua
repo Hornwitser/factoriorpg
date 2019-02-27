@@ -163,7 +163,7 @@ function diversify(event)
 				elseif random < DIVERSITY_QUOTA then --Replace!
 					random = math.random()
 					local refugee
-					local correction_factor = 1
+					local correction_factor
 					if v.prototype.mineable_properties.required_fluid and EXTRA_DIVORESITY then
 						refugee = get_type(global.extra_diverse_ores)
 					else
