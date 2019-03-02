@@ -131,9 +131,7 @@ function gOre(event)
         for y = event.area.left_top.y, event.area.left_top.y + 31 do
             local bbox = {{ x, y}, {x+0.5, y+0.5}}
             if not event.surface.get_tile(x,y).collides_with("water-tile") and event.surface.count_entities_filtered{type="cliff", area=bbox} == 0 then
-                local amount = (x^2 + y^2)^ORE_SCALING / LINEAR_SCALAR
                 if x^2 + y^2 >= global.STARTING_RADIUS^2 then
-
                     local type
                     if global.DANGORE_MODE == "random" then
                         --Build the ore list.  Uranium can only appear in uranium chunks.
@@ -191,6 +189,7 @@ function gOre(event)
                         --Default case.  Shouldn't need this!
                         type = type or global.pie.ores[1][1]
                     end
+                    local amount = (x^2 + y^2)^ORE_SCALING / LINEAR_SCALAR * game.surfaces[1].map_gen_settings.autoplace_controls[type].richness
                     event.surface.create_entity{name=type, amount=amount, position={x, y}, enable_tree_removal=false, enable_cliff_removal=false}
                 end
             end
@@ -365,7 +364,7 @@ function flOre_is_lava()
             if count > (distance * 20) ^2 * 0.7 then
                 global.flOre[p.name] = distance + 1
                 local target = p.vehicle or p.character
-                p.surface.create_entity{name="acid-projectile-purple", target=target, position=target.position, speed=10}
+                p.surface.create_entity{name="acid-stream-worm-medium", target=target, position=target.position, duration=30}
                 target.health = target.health - 10 * distance
                 if target.health == 0 then target.die() end
             else
@@ -488,24 +487,31 @@ function divOresity_init()
     for k,v in pairs(global.diverse_ore_list) do
         local autoplace = game.surfaces[1].map_gen_settings.autoplace_controls[v]
         local adding
+        -- if autoplace then
+        --     if autoplace.frequency == "none" then
+        --         adding = 0
+        --     elseif autoplace.frequency == "very-low" then
+        --         adding = 1
+        --     elseif autoplace.frequency == "low" then
+        --         adding = 2
+        --     elseif autoplace.frequency == "normal" then
+        --         adding = 3
+        --     elseif autoplace.frequency == "high" then
+        --         adding = 4
+        --     elseif autoplace.frequency == "very-high" then
+        --         adding = 5
+        --     end
+        -- end
         if autoplace then
             if autoplace.frequency == "none" then
                 adding = 0
-            elseif autoplace.frequency == "very-low" then
-                adding = 1
-            elseif autoplace.frequency == "low" then
-                adding = 2
-            elseif autoplace.frequency == "normal" then
-                adding = 3
-            elseif autoplace.frequency == "high" then
-                adding = 4
-            elseif autoplace.frequency == "very-high" then
-                adding = 5
+            else
+                adding = autoplace.frequency * autoplace.size
             end
         end
-        if not adding then adding = 3 end --Default case
+        if not adding then adding = 0 end
         if adding > 0 then
-            local amount = adding * game.entity_prototypes[v].autoplace_specification.coverage
+            local amount = adding --* game.entity_prototypes[v].autoplace_specification.coverage
             if game.entity_prototypes[v].mineable_properties.required_fluid then
                 table.insert(ore_ranking_raw, 1, {name=v, amount=amount})
             else

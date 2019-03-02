@@ -748,17 +748,17 @@ function rpg_give_bonuses(player)
 			player.character_resource_reach_distance_bonus = math.floor(bonuslevel/8)
 			player.character_build_distance_bonus = math.floor(bonuslevel/3)
 			player.character_inventory_slots_bonus = math.floor(bonuslevel/3)
-			if global.rpg_tmp[player.name].level >= 50 then
-				player.quickbar_count_bonus = 2
-			elseif global.rpg_tmp[player.name].level >= 20 then
-				player.quickbar_count_bonus = 1
-			end
+			-- if global.rpg_tmp[player.name].level >= 50 then
+			-- 	player.quickbar_count_bonus = 2
+			-- elseif global.rpg_tmp[player.name].level >= 20 then
+			-- 	player.quickbar_count_bonus = 1
+			-- end
 		else
 			player.character_reach_distance_bonus = math.floor(bonuslevel/6)
 			player.character_build_distance_bonus = math.floor(bonuslevel/6)
 			player.character_resource_reach_distance_bonus = math.floor(bonuslevel/12)
 			player.character_inventory_slots_bonus = math.floor(bonuslevel/6)
-			player.quickbar_count_bonus = 0
+			-- player.quickbar_count_bonus = 0
 		end
 		if global.rpg_data[player.name].class == "Scientist" then
 			player.character_maximum_following_robot_count_bonus = math.floor(bonuslevel/2.5)

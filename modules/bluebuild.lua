@@ -149,9 +149,9 @@ function bluebuild.build(builder)
 				moduleList = ghost.item_requests --{"name"=..., "count"=...}
 			end
 			for __, item in pairs(materials) do
-				if builder.get_item_count(__) > 0 then
+				if builder.get_item_count(item.name) >= item.count then
 					if ghost.type == "tile-ghost" then
-						builder.remove_item({name=__})
+						builder.remove_item({name=item.name, count=item.count})
 						ghost.revive()
 						return true
 					end
@@ -178,7 +178,7 @@ function bluebuild.build(builder)
 						script.raise_event(defines.events.on_built_entity, {created_entity=revive, player_index=builder.index, name="on_built_entity"})
 
 						--table.remove(areaList, index)
-						builder.remove_item({name=__})
+						builder.remove_item({name=item.name, count=item.count})
 						return true
 					end
 				end

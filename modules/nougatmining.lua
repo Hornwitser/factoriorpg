@@ -33,8 +33,7 @@ function nougat.bake()
     if game.entity_prototypes["electric-mining-drill"] then
         local proto  = game.entity_prototypes["electric-mining-drill"]
         --How much pollution to create per stack of products.
-        --This assumes a mining hardness of 0.9
-        global.nougat.pollution = (proto.electric_energy_source_prototype.emissions * proto.energy_usage * 60) / proto.mining_power / proto.mining_speed * 0.9
+        global.nougat.pollution = (proto.electric_energy_source_prototype.emissions * proto.energy_usage * 60) / proto.mining_speed
         return
     else
         --Fallback if "electric-mining-drill" doesn't exist.
