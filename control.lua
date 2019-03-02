@@ -38,7 +38,7 @@ require "modules/nyan" --More silliness.
 -- require "modules/seasons" --Let's mess with solar. --Causes desyncs until 0.17
 --require "modules/dark harvest" --Only way to get uranium is from biter deaths.
 --require "modules/tOredumonde" --Ore spawns in directions. This must be called before divOresity. NOTE: STONE_BYPRODUCT must be false.
-require "modules/divOresity" --Some ore gets scrambled and must be filtered.
+--require "modules/divOresity" --Some ore gets scrambled and must be filtered.
 require "modules/piety" --Way to consume excess stone.
 --require "belt_limit" --Limits number of belts per player.  Mostly for UPS reasons.
 --require "modules/infinity" --Infinite ore.  Almost.  Don't recommend with peppermint/Nougat
@@ -51,9 +51,9 @@ require "modules/piety" --Way to consume excess stone.
 -- World Generators: Most are exclusive.
 --require "maps/prospector" --Radars generate ore
 --require "maps/TTSFN" --This Tank Stops for Nobody!
---require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
+require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
 --require "maps/grid" --Generate a void grid.
-require "modules/divOresity" --Some ore gets scrambled and must be filtered. Must be called after dangOreus if using perlin mode.
+--require "modules/divOresity" --Some ore gets scrambled and must be filtered. Must be called after dangOreus if using perlin mode.
 --require "maps/digdug" -- My version of diggy
 --require "maps/searious" --Everything not a resource tile is turned into water.
 --require "oarc_events" --Oarc's separate spawn scenario.
