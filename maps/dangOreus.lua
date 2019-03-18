@@ -298,8 +298,7 @@ function dangOre(event)
         event.created_entity.type == "logistic-container" or
         event.created_entity.type == "pipe" or
         event.created_entity.type == "pipe-to-ground" then
-			return
-		end
+		return
 	end
     local last_user = event.created_entity.last_user
     local ores = event.created_entity.surface.count_entities_filtered{type="resource", area=event.created_entity.bounding_box}
