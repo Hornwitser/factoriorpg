@@ -35,7 +35,7 @@ require "modules/rainbow" --Top of the line graphics!
 require "modules/nyan" --More silliness.
 
 --Gameplay
--- require "modules/seasons" --Let's mess with solar. --Causes desyncs until 0.17
+require "modules/seasons" --Let's mess with solar.
 --require "modules/dark harvest" --Only way to get uranium is from biter deaths.
 --require "modules/tOredumonde" --Ore spawns in directions. This must be called before divOresity. NOTE: STONE_BYPRODUCT must be false.
 --require "modules/divOresity" --Some ore gets scrambled and must be filtered.

@@ -2,6 +2,7 @@
 global.STARTING_RADIUS = settings.global["starting radius"].value
 global.EASY_ORE_RADIUS = settings.global["simple ore radius"].value
 global.DANGORE_MODE = settings.global["dangOre mode"].value
+global.SQUARE_MODE = settings.global["square mode"].value
 global.V_SCALE_FACTOR = settings.global["voronoi scale factor"].value
 
 --dangOreus, a scenario by Mylon
@@ -131,7 +132,7 @@ function gOre(event)
         for y = event.area.left_top.y, event.area.left_top.y + 31 do
             local bbox = {{ x, y}, {x+0.5, y+0.5}}
             if not event.surface.get_tile(x,y).collides_with("water-tile") and event.surface.count_entities_filtered{type="cliff", area=bbox} == 0 then
-                if x^2 + y^2 >= global.STARTING_RADIUS^2 then
+                if global.SQUARE_MODE and ( math.abs(x) >= global.STARTING_RADIUS or math.abs(y) >= global.STARTING_RADIUS ) or (not global.SQUARE_MODE and x^2 + y^2 >= global.STARTING_RADIUS^2) then
                     local type
                     if global.DANGORE_MODE == "random" then
                         --Build the ore list.  Uranium can only appear in uranium chunks.
@@ -189,7 +190,8 @@ function gOre(event)
                         --Default case.  Shouldn't need this!
                         type = type or global.pie.ores[1][1]
                     end
-                    local amount = (x^2 + y^2)^ORE_SCALING / LINEAR_SCALAR * game.surfaces[1].map_gen_settings.autoplace_controls[type].richness
+                    local amount = ( ( global.SQUARE_MODE and ( math.max(math.abs(x), math.abs(y)) )^2 ) or (x^2 + y^2) )
+                        ^ ORE_SCALING / LINEAR_SCALAR * game.surfaces[1].map_gen_settings.autoplace_controls[type].richness
                     event.surface.create_entity{name=type, amount=amount, position={x, y}, enable_tree_removal=false, enable_cliff_removal=false}
                 end
             end
