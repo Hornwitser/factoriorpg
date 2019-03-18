@@ -1,4 +1,6 @@
-DIRT_THRESHOLD = 10
+--Dirtpath, a module written by Mylon
+--MIT License
+--Updated March 2019
 
 if MODULE_LIST then
 	module_list_add("Dirt Path")
