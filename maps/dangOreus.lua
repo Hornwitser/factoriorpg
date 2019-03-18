@@ -289,7 +289,7 @@ function dangOre(event)
     if event.created_entity.type == "locomotive" or event.created_entity.type == "fluid-wagon" or event.created_entity.type == "cargo-wagon" then
         return
     end
-    if EASY_MODE and --Dificulty setting
+    if EASY_MODE and ( --Dificulty setting
 		event.created_entity.type == "transport-belt" or
 		event.created_entity.type == "underground-belt" or
 		event.created_entity.type == "splitter" or
@@ -297,7 +297,7 @@ function dangOre(event)
 		event.created_entity.type == "container" or
         event.created_entity.type == "logistic-container" or
         event.created_entity.type == "pipe" or
-        event.created_entity.type == "pipe-to-ground" then
+        event.created_entity.type == "pipe-to-ground" ) then
 		return
 	end
     local last_user = event.created_entity.last_user
