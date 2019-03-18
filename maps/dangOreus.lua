@@ -285,15 +285,16 @@ function dangOre(event)
     if event.created_entity.type == "locomotive" or event.created_entity.type == "fluid-wagon" or event.created_entity.type == "cargo-wagon" then
         return
     end
-    if settings.global["easy mode"].value then --Dificulty setting
-		if event.created_entity.type == "transport-belt" or
+    if settings.global["easy mode"].value and --Dificulty setting
+		event.created_entity.type == "transport-belt" or
 		event.created_entity.type == "underground-belt" or
 		event.created_entity.type == "splitter" or
 		event.created_entity.type == "electric-pole" or
 		event.created_entity.type == "container" or
-		event.created_entity.type == "logistic-container" then
-			return
-		end
+        event.created_entity.type == "logistic-container" or
+        event.created_entity.type == "pipe" or
+        event.created_entity.type == "pipe-to-ground" then
+		return
 	end
     local last_user = event.created_entity.last_user
     local ores = event.created_entity.surface.count_entities_filtered{type="resource", area=event.created_entity.bounding_box}
