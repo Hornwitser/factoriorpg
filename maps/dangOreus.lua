@@ -289,13 +289,15 @@ function dangOre(event)
     if event.created_entity.type == "locomotive" or event.created_entity.type == "fluid-wagon" or event.created_entity.type == "cargo-wagon" then
         return
     end
-    if EASY_MODE then --Dificulty setting
-		if event.created_entity.type == "transport-belt" or
+    if EASY_MODE and --Dificulty setting
+		event.created_entity.type == "transport-belt" or
 		event.created_entity.type == "underground-belt" or
 		event.created_entity.type == "splitter" or
 		event.created_entity.type == "electric-pole" or
 		event.created_entity.type == "container" or
-		event.created_entity.type == "logistic-container" then
+        event.created_entity.type == "logistic-container" or
+        event.created_entity.type == "pipe" or
+        event.created_entity.type == "pipe-to-ground" then
 			return
 		end
 	end
