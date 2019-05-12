@@ -125,8 +125,8 @@ function nougat.chewy(event, assigned)
     if count < 30 then
         --We shouldn't bother. Need to advance index in case this is an isolated roboport.
         global.nougat.index = global.nougat.index + 1
-        if force.max_successful_attemps_per_tick_per_construction_queue * 60 < count + assigned then
-            force.max_successful_attemps_per_tick_per_construction_queue = math.floor(count + assigned * 1.5 / 60)
+        if force.max_successful_attempts_per_tick_per_construction_queue * 60 < count + assigned then
+            force.max_successful_attempts_per_tick_per_construction_queue = math.floor(count + assigned * 1.5 / 60)
         end    
         return
     end
@@ -282,7 +282,7 @@ Event.register('on_init', nougat.bake)
 Event.register(-60, nougat.chewy)
 if rpg then
     Event.register(rpg.on_reset_technology_effects, function(event)
-        event.force.max_successful_attemps_per_tick_per_construction_queue = 50
+        event.force.max_successful_attempts_per_tick_per_construction_queue = 50
         event.force.max_failed_attempts_per_tick_per_construction_queue = 5
     end)
 end
