@@ -144,9 +144,9 @@ function piety.scatter(roboport, blessing)
     roboport.die()
 end
 
-Event.register('on_init', piety.init)
-Event.register(defines.events.on_surface_created, piety.third_day)
-Event.register(-216000, piety.tribute)
+script.on_init(piety.init)
+script.on_event(defines.events.on_surface_created, piety.third_day)
+script.on_nth_tick(216000, piety.tribute)
 
 --game.tick % 216000 ~= 0 then
 --game.tick % 600 ~= 0 then --Debug
