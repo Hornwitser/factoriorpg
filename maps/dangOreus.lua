@@ -367,7 +367,7 @@ function flOre_is_lava()
             if count > (distance * 20) ^2 * 0.7 then
                 global.flOre[p.name] = distance + 1
                 local target = p.vehicle or p.character
-                p.surface.create_entity{name="acid-stream-worm-medium", target=target, position=target.position, duration=30}
+                p.surface.create_entity{name="acid-stream-worm-medium", target=target, source_position=target.position, position=target.position, duration=30}
                 target.health = target.health - 10 * distance
                 if target.health == 0 then target.die() end
             else

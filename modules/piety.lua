@@ -146,8 +146,7 @@ end
 
 Event.register('on_init', piety.init)
 Event.register(defines.events.on_surface_created, piety.third_day)
---Event.register(defines.events.on_tick, piety.tribute)
-script.on_nth_tick(600, piety.tribute)
+Event.register(-216000, piety.tribute)
 
---if game.tick % 216000 ~= 25200 then
---if game.tick % 600 ~= 0 then --Debug
+--game.tick % 216000 ~= 0 then
+--game.tick % 600 ~= 0 then --Debug
