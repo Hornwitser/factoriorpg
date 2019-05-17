@@ -71,8 +71,7 @@ function piety.tribute(event)
                                 --     res = "copper-ore"
                                 -- end
 
-                                local amount = math.floor(network.get_item_count("landfill") / piety.DIVISOR) * 20
-                                --Landfill costs 20 stone, so the blessing should be 20x the amount of landfill taken.
+                                local amount = math.floor(network.get_item_count("landfill") / piety.DIVISOR)
                                 
                                 network.remove_item{name="landfill", count=amount}
                                 --Check if dangOreus is active and turn off ghosts.
@@ -84,7 +83,8 @@ function piety.tribute(event)
                                 else
                                     piety.scatter(cell.owner, amount)
                                 end
-                                piety.bless(cell.owner.surface, cell.owner.position, res, amount)
+                                --Landfill costs 20 stone, so the blessing should be 20x the amount of landfill taken.
+                                piety.bless(cell.owner.surface, cell.owner.position, res, amount * 20)
                                 if cell.owner.last_user then
                                     game.print(cell.owner.last_user.name .. " has been blessed by the god of industry.")
                                 end
