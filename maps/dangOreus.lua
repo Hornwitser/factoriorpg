@@ -218,6 +218,7 @@ function voronoi(x, y)
         return vx * ux + vy * uy
     end
 
+    -- Mylon: I've learned not to touch what's not broken, but this could be replaced by v % 1.  However, Won't return a negative for negative numbers.
     local function fract(v) 
         -- Is there a more sane way to do this?
         local a, b = math.modf(v)
