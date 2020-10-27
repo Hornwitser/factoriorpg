@@ -18,10 +18,10 @@ require "rpg" --Award bonuses based on experience earned.
 
 --Modules
 --QOL
-require "modules/gravemarker" --Mark player death locations on map for corpse runs.
-require "modules/bluebuild" --Bluebuild softmod
-require "modules/autofill" --Softmod autofill separated from Oarc
-require "modules/nougatmining" --Logistic mining softmod.
+--require "modules/gravemarker" --Mark player death locations on map for corpse runs.
+--require "modules/bluebuild" --Bluebuild softmod
+--require "modules/autofill" --Softmod autofill separated from Oarc
+--require "modules/nougatmining" --Logistic mining softmod.
 --require "modules/peppermintmining" --Logistic mining softmod.
 require "modules/bpmirror" --Adds bpmirror command to flip BPs.
 require "modules/votekick" --Allows users to kick other users.
@@ -30,16 +30,16 @@ require "modules/tag" --Module to let players set a tag behind their names to im
 require "announcements"	--Module to announce stuff ingame / give the players a welcome message
 
 --Silly
-require "modules/dirtpath" --For some silliness.
-require "modules/rainbow" --Top of the line graphics!
-require "modules/nyan" --More silliness.
+--require "modules/dirtpath" --For some silliness.
+--require "modules/rainbow" --Top of the line graphics!
+--require "modules/nyan" --More silliness.
 
 --Gameplay
-require "modules/seasons" --Let's mess with solar.
+--require "modules/seasons" --Let's mess with solar.
 --require "modules/dark harvest" --Only way to get uranium is from biter deaths.
 --require "modules/tOredumonde" --Ore spawns in directions. This must be called before divOresity. NOTE: STONE_BYPRODUCT must be false.
 --require "modules/divOresity" --Some ore gets scrambled and must be filtered.
-require "modules/piety" --Way to consume excess stone.
+--require "modules/piety" --Way to consume excess stone.
 --require "belt_limit" --Limits number of belts per player.  Mostly for UPS reasons.
 --require "modules/infinity" --Infinite ore.  Almost.  Don't recommend with peppermint/Nougat
 --require "modules/enhancedbiters" --Adds extra behavior to biters to make them extra nasty.
@@ -51,7 +51,7 @@ require "modules/piety" --Way to consume excess stone.
 -- World Generators: Most are exclusive.
 --require "maps/prospector" --Radars generate ore
 --require "maps/TTSFN" --This Tank Stops for Nobody!
-require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
+--require "maps/dangOreus" --Ore is everywhere.  Cannot build on it!
 --require "maps/grid" --Generate a void grid.
 --require "modules/divOresity" --Some ore gets scrambled and must be filtered. Must be called after dangOreus if using perlin mode.
 --require "maps/digdug" -- My version of diggy
