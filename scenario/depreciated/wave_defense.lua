@@ -1,4 +1,5 @@
 require "util"
+local mod_gui = require "mod-gui"
 local increment = util.increment
 local format_number = util.format_number
 local format_time = util.formattime

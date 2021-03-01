@@ -2,6 +2,7 @@
 -- A 3Ra Gaming creation
 -- Modified by I_IBlackI_I
 -- Tag list modified by Mylon
+local mod_gui = require "mod-gui"
 
 if MODULE_LIST then
 	module_list_add("Tags")

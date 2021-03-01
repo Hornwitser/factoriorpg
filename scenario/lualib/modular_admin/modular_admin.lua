@@ -5,6 +5,7 @@
 --
 --	At the bottom of this file there is a list of sub-modules you can enable.
 --
+local mod_gui = require "mod-gui"
 
 --
 --	VARIABLES

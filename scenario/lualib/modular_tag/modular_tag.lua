@@ -1,5 +1,6 @@
 -- Give players the option to set their preferred role as a tag
 -- Modified by I_IBlackI_I
+local mod_gui = require "mod-gui"
 
 global.modular_tag = global.modular_tag or {}
 

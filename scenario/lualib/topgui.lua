@@ -1,6 +1,7 @@
 -- topgui Module
 -- Made by: I_IBlackI_I (Blackstone#4953 on discord) for FactorioMMO
 -- This module allows some more complex actions on the button in the top left, for example order them.
+local mod_gui = require "mod-gui"
 
 -- 
 -- EXAMPLE USAGES CAN BE FOUND AT THE BOTTOM OF THIS FILE

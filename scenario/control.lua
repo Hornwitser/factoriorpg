@@ -1,5 +1,4 @@
 --Heavy lifting stuff here.
-require "mod-gui" --Klonan's button prettifier
 Event = require "lib/event"
 require "utils/topgui" --Allows reordering guis.
 require "utils/bot" --Discord integration

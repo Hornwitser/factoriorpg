@@ -1,4 +1,5 @@
 --Allows players to craft items in mass quantities.
+local mod_gui = require "mod-gui"
 
 pcraft = {}
 global.pcraft = {}

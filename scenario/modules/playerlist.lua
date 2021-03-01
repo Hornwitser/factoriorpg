@@ -15,6 +15,7 @@ to your scenario control.lua.
 things to do (maybe)
 make it sorted by time played
 --]]
+local mod_gui = require "mod-gui"
 
 global.scenario = {variables={player_deaths={}}}
 

@@ -5,6 +5,7 @@
 -- 
 -- EXAMPLE USAGES CAN BE FOUND AT THE BOTTOM OF THIS FILE
 --
+local mod_gui = require "mod-gui"
 
 --
 --	VARIABLES

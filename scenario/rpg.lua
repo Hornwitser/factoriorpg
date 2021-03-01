@@ -14,7 +14,9 @@
 --require "rpg_stats" --Keep track of silly stats
 --require "rpg_builder" --Very unfinished.  Adds a limited number of higher level turrets for builders.
 require "rpg_permissions" --Limit certain actions to players level 5 or greater
-	
+
+local mod_gui = require "mod-gui"
+
 rpg = {}
 rpg.classes = {"Engineer", "Miner", "Builder", "Soldier", "Scientist", "Beastmaster"}
 

@@ -3,6 +3,7 @@
 -- and gives admins a tool to make it destroyable again.
 -- the rocket auto-launches when there is a satellite in it.
 -- Edited by Mylon to be less condescending
+local mod_gui = require "mod-gui"
 
 global.satellite_sent = global.satellite_sent or {}
 

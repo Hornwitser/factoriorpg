@@ -1,6 +1,7 @@
 --A patreon-rewarding module build by I_IBlackI_I for FactorioMMO
 --This module gives patreons the ability to have a unique tag and a general patreon tag
 --  they can also use basic spectating, but not teleporting or following.
+local mod_gui = require "mod-gui"
 
 
 global.patreon = global.patreon or {}
