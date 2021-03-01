@@ -1,2 +1,3 @@
-rpgdata.lua
-control.lua
+package-lock.json
+node_modules/
+dist/

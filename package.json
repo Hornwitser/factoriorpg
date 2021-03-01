@@ -1,0 +1,35 @@
+{
+  "name": "@hornwitser/factoriorpg",
+  "private": true,
+  "version": "0.0.1",
+  "description": "Clusterio plugin adding RPG mechanics to Factorio",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint \"*.js\"",
+    "build": "webpack-cli --env production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hornwitser/factoriorpg.git"
+  },
+  "keywords": [
+    "clusterio",
+    "factorio"
+  ],
+  "contributors": [
+    "Mylon",
+    "Hornwitser <github@hornwitser.no>"
+  ],
+  "license": "UNLICENSED",
+  "peerDependencies": {
+    "@clusterio/lib": "^2.0.0-alpha.4"
+  },
+  "devDependencies": {
+    "webpack": "^5.4.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-merge": "^5.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
