@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-# factoriommoscenarios
-Scenarios used by FMMO
-=======
 Factorio RPG, a Factorio soft-mod by Mylon
 
 Credits to 3ra Gaming for admin tools
@@ -10,4 +6,3 @@ Credits to Oarcine for the separate spawn map style.
 
 Current license (for RPG.lua) is none.  Please ask before using.
 Other files are licensed separately.
->>>>>>> oarc-scenario
