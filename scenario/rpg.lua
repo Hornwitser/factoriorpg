@@ -561,17 +561,17 @@ function rpg_tech_researched(event)
 	local value = 0
 	--Space science packs aren't worth anything.  You already got exp for the rocket!
 	for _, ingredient in pairs(event.research.research_unit_ingredients) do
-		if ingredient.name == "science-pack-1" then
+		if ingredient.name == "automation-science-pack" then
 			value = value + ingredient.amount * event.research.research_unit_count
-		elseif ingredient.name == "science-pack-2" then
+		elseif ingredient.name == "logistic-science-pack" then
 			value = value + ingredient.amount * event.research.research_unit_count
-		elseif ingredient.name == "science-pack-3" then
+		elseif ingredient.name == "chemical-science-pack" then
 			value = value + ingredient.amount * event.research.research_unit_count
 		elseif ingredient.name == "military-science-pack" then
 			value = value + ingredient.amount * event.research.research_unit_count
 		elseif ingredient.name == "production-science-pack" then
 			value = value + ingredient.amount * event.research.research_unit_count
-		elseif ingredient.name == "high-tech-science-pack" then
+		elseif ingredient.name == "utility-science-pack" then
 			value = value + ingredient.amount * event.research.research_unit_count
 		end
 	end
