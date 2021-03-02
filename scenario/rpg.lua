@@ -905,7 +905,8 @@ function rpg_give_team_bonuses(force)
 	force.set_turret_attack_modifier("gun-turret", force.get_turret_attack_modifier("gun-turret") * 0.85 - 0.15 + builderbonus / 100)
 	
 	--Just for you, Tux0n0
-	force.set_ammo_damage_modifier("railgun", soldierbonus / 25)
+	--force.set_ammo_damage_modifier("railgun", soldierbonus / 25)
+	--railgun was removed
 
 	-- for k,v in pairs(turrettypes) do
 	-- 	force.set_turret_attack_modifier(k, builderbonus / 100 + force.get_turret_attack_modifier(k) * 0.8 - 0.2)
