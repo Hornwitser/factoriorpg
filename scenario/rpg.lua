@@ -199,6 +199,13 @@ function rpg_remote_save(event)
 	clusterio_api.send_json("factoriorpg", { type = "savedata", data = data })
 end
 
+--Autosave progress for connected players so that it's not all lost if the server crashes.
+local function rpg_autosave(event)
+	for _, player in ipairs(game.connected_players) do
+		rpg_remote_save({ player_index = player.index })
+	end
+end
+
 --Save the persistent data.
 -- Single line command for manual export:
 -- /silent-command game.write_file("rpgdata - 2017-05-19.txt", serpent.block(global.rpg_data, {comment=false}), true, 1)
@@ -1092,3 +1099,4 @@ Event.register(defines.events.on_pre_player_died, rpg_im_too_smart_to_die)
 --Event.register(defines.events.on_research_finished, rpg_nerf_tech)
 --Event.register(defines.events.on_tick, rpg_exp_tick) --For debug
 Event.register('on_init', rpg_init)
+script.on_nth_tick(60*300, rpg_autosave)
