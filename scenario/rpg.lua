@@ -16,6 +16,7 @@
 require "rpg_permissions" --Limit certain actions to players level 5 or greater
 
 local mod_gui = require "mod-gui"
+local clusterio_api = require "modules/clusterio/api"
 
 rpg = {}
 rpg.classes = {"Engineer", "Miner", "Builder", "Soldier", "Scientist", "Beastmaster"}
@@ -40,7 +41,7 @@ commands.add_command("loaddata", "Loads rpg data", function(data)
 	if game.player then
 		return
 	end
-	--Incoming string is of form: {name=player.name, class=exp}
+	--Incoming string is of form: {"name":player.name,"class"=exp}
 	--rpg_tmp stores value on load so we can do a diff and store only the diff.
 	--Let's convert it from type string to type table
 	--game.print(serpent.line(str))
@@ -49,8 +50,8 @@ commands.add_command("loaddata", "Loads rpg data", function(data)
 		return
 	end
 
-	local data = loadstring('return ' .. data.parameter)() --Warning: This is insecure.  I don't like it one bit.
-	
+	local data = game.json_to_table(data.parameter)
+
 	--game.print(serpent.line(data))
 	if not data.playername then
 		log("Invalid data.")
@@ -167,22 +168,22 @@ function rpg_loadsave(event)
 	-- end
 end
 
---Write a file.  Script will monitor this output file and consume events and pass data back via rcon.
+--Notify Clusterio plugin to load data of player which will then pass the data back via rcon.
 --Simple method: rcon: /silent-command global.rpg_data[name] = data; global.rpg_tmp[name] = data
 --Hard method: rcon: /loaddata {playername=name, class1=exp, class2=exp...}
 function rpg_remote_load(event)
 	local player = game.players[event.player_index]
-	game.write_file("loadsave", player.name .. "\n", true, 0)
+	clusterio_api.send_json("factoriorpg", { type = "loadsave", player = player.name })
 end
 
---Write data to a file.  Script will monitor this output file and consume lines.
+--Write data to Clusterio which will save it to its database.
 --Each object is a difference of exp.
 function rpg_remote_save(event)
 	local player = game.players[event.player_index]
-	local data = '{"name":"' .. player.name .. '",'
+	local data = { name = player.name }
 	for k, v in pairs(rpg.classes) do
 		if global.rpg_data[player.name][v] > global.rpg_tmp[player.name][v] then
-			data = data .. '"' .. v .. '":' .. global.rpg_data[player.name][v]-global.rpg_tmp[player.name][v] ..","
+			data[v] = global.rpg_data[player.name][v]-global.rpg_tmp[player.name][v]
 		end	
 	end
 	--Set tmp value to current value so we don't try to save the delta exp twice.
@@ -191,14 +192,11 @@ function rpg_remote_save(event)
 	end
 	--Now repeat for the bank.
 	if global.rpg_data[player.name].bank < global.rpg_tmp[player.name].bank then
-		data = data .. '"bank":' .. global.rpg_data[player.name].bank - global.rpg_tmp[player.name].bank ..","
+		data["bank"] = global.rpg_data[player.name].bank - global.rpg_tmp[player.name].bank
 		global.rpg_tmp[player.name].bank = global.rpg_data[player.name].bank
 	end
 
-	data = data .. "}\n"
-	--Trim the trailing comma
-	data = string.gsub(data, ",}", "}")
-	game.write_file("savedata", data, true, 0)
+	clusterio_api.send_json("factoriorpg", { type = "savedata", data = data })
 end
 
 --Save the persistent data.

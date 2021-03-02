@@ -31,5 +31,8 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "dependencies": {
+    "fs-extra": "^9.1.0"
   }
 }
