@@ -54,7 +54,6 @@ require "announcements"	--Module to announce stuff ingame / give the players a w
 --require "modules/divOresity" --Some ore gets scrambled and must be filtered. Must be called after dangOreus if using perlin mode.
 --require "maps/digdug" -- My version of diggy
 --require "maps/searious" --Everything not a resource tile is turned into water.
---require "oarc_events" --Oarc's separate spawn scenario.
 --require "maps/heximaze" --A labyrinth.
 --require "maps/perlinvoid" --Organic void shapes.
 --require "void" --Worldgenerator which randomly generates holes in the world
