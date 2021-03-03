@@ -22,7 +22,7 @@ require "rpg" --Award bonuses based on experience earned.
 --require "modules/nougatmining" --Logistic mining softmod.
 --require "modules/peppermintmining" --Logistic mining softmod.
 require "modules/bpmirror" --Adds bpmirror command to flip BPs.
-require "modules/votekick" --Allows users to kick other users.
+--require "modules/votekick" --Allows users to kick other users.
 require "modules/playerlist" --List of online players
 require "modules/tag" --Module to let players set a tag behind their names to improve teamwork
 require "announcements"	--Module to announce stuff ingame / give the players a welcome message
