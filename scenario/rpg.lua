@@ -149,15 +149,6 @@ function rpg_loadsave(event)
 	global.rpg_tmp[player.name].class_timer = -20*60*60
 
 
-	-- if rpg_save[player.name] then
-	-- 	--Load bank (legacy) and class exp
-	-- 	for k,v in pairs(rpg_save[player.name]) do
-	-- 		global.rpg_data[player.name][k] = v
-	-- 	end
-	-- 	if not rpg_save[player.name].bank then 
-	-- 		rpg_save[player.name].bank = 0
-	-- 	end
-	-- end
 	--Set class timer to a negative value so the timer function does not interrupt the first class selection.
 	--global.rpg_tmp[player.name] = {class_timer=-20*60*60}
 
