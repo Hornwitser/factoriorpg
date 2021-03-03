@@ -31,7 +31,8 @@ commands.add_command("vet", "Vet a player as trusted.", function(params)
 		end
 		if not global.vetting[name][game.player.name] then
 			global.vetting[name][game.player.name] = true
-			if #global.vetting[name] >= TRUST_COUNT or #global.vetting[name] == #game.connected_players - 1 then
+			local vet_count = table_size(global.vetting[name])
+			if vet_count >= TRUST_COUNT or vet_count == #game.connected_players - 1 then
 				game.players[name].permission_group = game.permissions.get_group("trusted")
 				game.players[name].print("Players have vetted you and given you permissions.")
 			end
