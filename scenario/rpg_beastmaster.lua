@@ -110,7 +110,11 @@ function rpg_beast_init()
 	beasts.friendly_fire = false
 end
 
-Event.register(defines.events.on_entity_died, rpg_beast_taming)
-Event.register(defines.events.on_tick, rpg_beast_sickem)
-Event.register(defines.events.on_tick, rpg_free_pets)
-Event.register('on_init', rpg_beast_init)
+return {
+	events = {
+		[defines.events.on_entity_died] = rpg_beast_taming,
+		[defines.events.on_tick] = rpg_beast_sickem,
+		[defines.events.on_tick] = rpg_free_pets,
+	},
+	on_init = rpg_beast_init,
+}

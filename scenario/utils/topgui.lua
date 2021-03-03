@@ -143,11 +143,17 @@ end
 --	EVENTS
 --
 
-Event.register(defines.events.on_player_joined_game, function(event)
+local function on_player_joined_game(event)
 	local p = game.players[event.player_index]
 	global.topgui.raw[p.name] = global.topgui.raw[p.name] or {}
 	topgui_gui_changed(p)
-end)
+end
+
+return {
+	events = {
+		[defines.events.on_player_joined_game] = on_player_joined_game,
+	}
+}
 
 --
 --	EXAMPLES

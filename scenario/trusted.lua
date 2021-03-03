@@ -54,9 +54,12 @@ function trusted_joined(event)
 end
 
 
-Event.register('on_init', function()
-	commands.add_command("trust", "Enter the username of the player you want to add to the trusted list.", trusted_add)
-	commands.add_command("trust_remove", "Enter the username of the player you want to remove from the trusted list.", trusted_remove)
-end)
-
-Event.register(defines.events.on_player_joined_game, trusted_joined)
+return {
+	add_commands = function()
+		commands.add_command("trust", "Enter the username of the player you want to add to the trusted list.", trusted_add)
+		commands.add_command("trust_remove", "Enter the username of the player you want to remove from the trusted list.", trusted_remove)
+	end,
+	events = {
+		[defines.events.on_player_joined_game] = trusted_joined,
+	},
+}

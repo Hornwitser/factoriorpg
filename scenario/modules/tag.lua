@@ -80,9 +80,14 @@ commands.add_command("tag", "Set a custom tag.", function(tag)
 	end
 end)
 
+local events = {
+	[defines.events.on_gui_click] = tag_on_gui_click,
+}
+
 if rpg then
-	Event.register(rpg.on_rpg_gui_created, tag_create_gui)
+	events[rpg.on_rpg_gui_created] = tag_create_gui
 else
-	Event.register(defines.events.on_player_created, tag_create_gui)
+	events[defines.events.on_player_created] = tag_create_gui
 end
-Event.register(defines.events.on_gui_click, tag_on_gui_click)
+
+return { events = events }

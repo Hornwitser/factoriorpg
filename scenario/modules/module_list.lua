@@ -28,4 +28,8 @@ function module_list_connect(event)
 end
 
 -- The event that causes the module list to display
-Event.register(defines.events.on_player_joined_game, module_list_connect)
+return {
+    events = {
+        [defines.events.on_player_joined_game] = module_list_connect,
+    },
+}

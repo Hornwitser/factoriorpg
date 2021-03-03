@@ -10,11 +10,6 @@
 --Idea: Only mine ore if a valid requester is in the network.
 --To do that, need to do iterate over logistic_network.requester_points and then iterate over each of those to find a filter that matches an ore.
 
---require "rpg_beastmaster" --New class gets its own file for class-related events.
---require "rpg_stats" --Keep track of silly stats
---require "rpg_builder" --Very unfinished.  Adds a limited number of higher level turrets for builders.
-require "rpg_permissions" --Limit certain actions to players level 5 or greater
-
 local mod_gui = require "mod-gui"
 local clusterio_api = require "modules/clusterio/api"
 
@@ -1072,22 +1067,28 @@ end
 -- 	return true
 -- end
 
---Event.register(defines.events.on_player_created, rpg_add_gui) --We'll do this after a class is chosen.
-Event.register(defines.events.on_player_created, rpg_loadsave) --This doesn't actually load anything anymore, just gives us some defaults.
---Event.register(defines.events.on_player_created, rpg_class_picker) --Wait for data to load.
---Event.register(defines.events.on_player_created, rpg_starting_resources)
-Event.register(defines.events.on_gui_click, rpg_class_click)
-Event.register(defines.events.on_player_joined_game, rpg_connect)
-Event.register(defines.events.on_player_joined_game, rpg_remote_load)
-Event.register(defines.events.on_player_left_game, rpg_remote_save)
-Event.register(defines.events.on_player_respawned, rpg_respawn)
-Event.register(defines.events.on_rocket_launched, rpg_satellite_launched)
-Event.register(defines.events.on_entity_died, rpg_nest_killed)
-Event.register(defines.events.on_research_finished, rpg_tech_researched)
-Event.register(defines.events.on_sector_scanned, rpg_bonus_scan)
-Event.register(defines.events.on_pre_player_died, rpg_im_too_smart_to_die)
---Event.register(defines.events.on_tick, rpg.heartbeat)
---Event.register(defines.events.on_research_finished, rpg_nerf_tech)
---Event.register(defines.events.on_tick, rpg_exp_tick) --For debug
-Event.register('on_init', rpg_init)
-script.on_nth_tick(60*300, rpg_autosave)
+local rpg_events = {
+	--[defines.events.on_player_created] = rpg_add_gui, --We'll do this after a class is chosen.
+	[defines.events.on_player_created] = rpg_loadsave, --This doesn't actually load anything anymore, just gives us some defaults.
+	--[defines.events.on_player_created] = rpg_class_picker, --Wait for data to load.
+	--[defines.events.on_player_created] = rpg_starting_resources,
+	[defines.events.on_gui_click] = rpg_class_click,
+	[defines.events.on_player_joined_game] = rpg_connect,
+	[defines.events.on_player_joined_game] = rpg_remote_load,
+	[defines.events.on_player_left_game] = rpg_remote_save,
+	[defines.events.on_player_respawned] = rpg_respawn,
+	[defines.events.on_rocket_launched] = rpg_satellite_launched,
+	[defines.events.on_entity_died] = rpg_nest_killed,
+	[defines.events.on_research_finished] = rpg_tech_researched,
+	[defines.events.on_sector_scanned] = rpg_bonus_scan,
+	[defines.events.on_pre_player_died] = rpg_im_too_smart_to_die,
+	--[defines.events.on_tick] = rpg.heartbeat,
+	--[defines.events.on_research_finished] = rpg_nerf_tech,
+	--[defines.events.on_tick] = rpg_exp_tick, --For debug
+}
+
+return {
+	events = rpg_events,
+	on_init = rpg_init,
+	on_nth_tick = { [60*300] = rpg_autosave },
+}

@@ -416,11 +416,16 @@ local function player_list_on_player_died(event)
 	log_on_player_died_debug("exit", event)
 end
 
+local events = {
+	[defines.events.on_gui_click] = on_gui_click,
+	[defines.events.on_player_died] = player_list_on_player_died,
+}
+
 --Delay creating the player list until the rpg gui is added.
 if rpg then
-	Event.register(rpg.on_rpg_gui_created, on_player_joined_game)
+	events[rpg.on_rpg_gui_created] = on_player_joined_game
 else
-	Event.register(defines.events.on_player_joined_game, on_player_joined_game)
+	events[defines.events.on_player_joined_game] = on_player_joined_game
 end
-Event.register(defines.events.on_gui_click, on_gui_click)
-Event.register(defines.events.on_player_died, player_list_on_player_died)
+
+return { events = events }

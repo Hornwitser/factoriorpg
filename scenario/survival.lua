@@ -61,8 +61,9 @@ global.customBiters = {}
 --For troublemakers.
 -- /silent-command local trouble = "name" for x = -1, 1, 1 do for y = -1, 1, 1 do game.surfaces[1].create_entity{name="medium-biter", position={game.players[trouble].position.x+x, game.players[trouble].position.y+y}} end end
 
+local events = {}
 --Starting conditions.
-script.on_event(defines.events.on_player_created, function(event)
+events[defines.events.on_player_created] = function(event)
   local player = game.players[event.player_index]  
   --Accelerated start.  A significant boost, but not a comfortable one.
 	if ACCELERATED_START then
@@ -112,11 +113,11 @@ script.on_event(defines.events.on_player_created, function(event)
   -- else
     -- player.print({"msg-intro"})
   -- end
-end)
+end
 
 --Win condition, unchanged from vanilla.
 -- Necessary only for the scenario version.
-script.on_event(defines.events.on_rocket_launched, function(event)
+events[defines.events.on_rocket_launched] = function(event)
   local force = event.rocket.force
   if event.rocket.get_item_count("satellite") == 0 then
     if (#game.players <= 1) then
@@ -146,7 +147,7 @@ script.on_event(defines.events.on_rocket_launched, function(event)
       frame.add{name="rocket_count", type = "label", caption=tostring(global.satellite_sent[force.name])}
     end
   end
-end)
+end
 
 --Survive!
 function spawnAttack()
@@ -618,37 +619,37 @@ function addCustomBiters()
 end
 
 --Event triggers
-event.register(defines.events.on_chunk_generated, killBases)
+events[defines.events.on_chunk_generated] = killBases
 -- script.on_event(defines.events.on_chunk_generated, function(event)
 -- 	killBases(event)
 -- 	-- Scenario Addon: Global Warming
 -- 	checkChunk(event)
 -- end)
 
-Event.register(defines.events.on_built_entity, addLab)
+events[defines.events.on_built_entity] = addLab
 
 -- script.on_event(defines.events.on_built_entity, function(event)
 -- 	addLab(event)
 -- end)
 
-Event.register(defines.events.on_robot_built_entity, addLab)
+events[defines.events.on_robot_built_entity] = addLab
 
 -- script.on_event(defines.events.on_robot_built_entity, function(event)
 -- 	addLab(event)
 -- end)
 
-Event.register(defines.events.on_entity_died, splitters)
+events[defines.events.on_entity_died] = splitters
 
 -- script.on_event(defines.events.on_entity_died, function(event)
 -- 	--spawnArtifact(event)
 -- 	splitters(event)
 -- end)
 
-Event.register(defines.events.on_tick, checkForAttack)
-Event.register(defines.events.on_tick, massAttack)
-Event.register(defines.events.on_tick, checkZombies)
-Event.register(defines.events.on_tick, labAccident)
-Event.register(defines.events.on_tick, nerfSolar)
+events[defines.events.on_tick] = checkForAttack
+events[defines.events.on_tick] = massAttack
+events[defines.events.on_tick] = checkZombies
+events[defines.events.on_tick] = labAccident
+events[defines.events.on_tick] = nerfSolar
 
 
 -- script.on_event(defines.events.on_tick, function(event)
@@ -707,8 +708,6 @@ Event.register(defines.events.on_tick, nerfSolar)
 -- 	game.map_settings.enemy_evolution.pollution_factor = 0.000015 * EVOLUTION_SCALE * global.modDifficulty
 -- end)
 
-Event.register('on_init', survival_init)
-
 function survival_init()
 	global.customBiters = {}
 	global.modDifficulty = 1
@@ -736,3 +735,8 @@ function survival_init()
 		enemy.destroy()
 	end
 end
+
+return {
+	on_init = survival_init,
+	events,
+}

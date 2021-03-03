@@ -70,5 +70,9 @@ function rpg_permissions_init()
 	game.permissions.create_group("trusted") --For level 5+ players.
 end
 
-Event.register(defines.events.on_player_joined_game, auto_promote)
-Event.register('on_init', rpg_permissions_init)
+return {
+	events = {
+		[defines.events.on_player_joined_game] = auto_promote,
+	},
+	on_init = rpg_permissions_init,
+}

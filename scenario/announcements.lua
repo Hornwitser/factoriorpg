@@ -44,5 +44,7 @@ function announcements_show_intro(event)
 end
 
 -- Event handlers
-Event.register(-(60*60*20), announcement_show)
-Event.register(defines.events.on_player_created, announcements_show_intro)
+return {
+	on_nth_tick = { [60*60*20] = announcement_show },
+	events = { [defines.events.on_player_created] = announcements_show_intro },
+}

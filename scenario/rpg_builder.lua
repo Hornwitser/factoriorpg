@@ -39,4 +39,6 @@ function rpg.builder.init()
 	turret.set_friend(game.forces.player, true)
 end
 
-Event.register('on_init', rpg.builder.init)
+return {
+	on_init = rpg.builder.init,
+}

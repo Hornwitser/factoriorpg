@@ -1,13 +1,18 @@
 --Heavy lifting stuff here.
-Event = require "lib/event"
-require "utils/topgui" --Allows reordering guis.
-require "utils/antigrief" --Look for suspicious behavior and report it to admins/log it.
+local event_handler = require("event_handler")
+event_handler.add_lib(require "utils/topgui") --Allows reordering guis.
+event_handler.add_lib(require "utils/antigrief") --Look for suspicious behavior and report it to admins/log it.
 --require "utils/modular_admin/modular_admin" --FMMO admin tools 
 --require "utils/modular_information/modular_information" --Info windows from FMMO
-require "modules/module_list" --Creates and displays a list of active modules on login.
-require "rpg" --Award bonuses based on experience earned.
---require "permissions" --Permission manager
---require "trusted" --Module to add trusted players to a seperate permission group
+event_handler.add_lib(require "modules/module_list") --Creates and displays a list of active modules on login.
+--event_handler.add_lib(require "rpg_beastmaster") --New class gets its own file for class-related events.
+--event_handler.add_lib(require "rpg_stats") --Keep track of silly stats
+--event_handler.add_lib(require "rpg_builder") --Very unfinished.  Adds a limited number of higher level turrets for builders.
+event_handler.add_lib(require "rpg_permissions") --Limit certain actions to players level 5 or greater
+event_handler.add_lib(require "rpg") --Award bonuses based on experience earned.
+
+--event_handler.add_lib(require "permissions") --Permission manager
+--event_handler.add_lib(require "trusted") --Module to add trusted players to a seperate permission group
 --require "locale/utils/patreon" --Module to give patreons spectate and a nice unique tag
 --require "fmcd" --Module to consolidate saving data to an output file for the agent
 --require "stats" --Module to generate stats and print them to the filesystem
@@ -23,9 +28,9 @@ require "rpg" --Award bonuses based on experience earned.
 --require "modules/peppermintmining" --Logistic mining softmod.
 require "modules/bpmirror" --Adds bpmirror command to flip BPs.
 --require "modules/votekick" --Allows users to kick other users.
-require "modules/playerlist" --List of online players
-require "modules/tag" --Module to let players set a tag behind their names to improve teamwork
-require "announcements"	--Module to announce stuff ingame / give the players a welcome message
+event_handler.add_lib(require "modules/playerlist") --List of online players
+event_handler.add_lib(require "modules/tag") --Module to let players set a tag behind their names to improve teamwork
+event_handler.add_lib(require "announcements") --Module to announce stuff ingame / give the players a welcome message
 
 --Silly
 --require "modules/dirtpath" --For some silliness.
@@ -43,7 +48,7 @@ require "announcements"	--Module to announce stuff ingame / give the players a w
 --require "modules/enhancedbiters" --Adds extra behavior to biters to make them extra nasty.
 --require "modules/lazybastard" --Much slower crafting speed
 --require "modules/regional" --Regional Crafting, goods must be produced near matching region markers
---require "rpg_pocket_crafter" --Pocket crafting!
+--event_handler.add_lib(require "rpg_pocket_crafter") --Pocket crafting!
 --require "modules/masspower" --Better than mass to energy, this is mass to power!
 
 -- World Generators: Most are exclusive.
@@ -72,12 +77,16 @@ function player_joined(event)
 end
 
 --require "lualib/pdnc" --Zr's fancy day-night cycle stuff
--- require "wg_jungle" --Jungle World Generator, generates a world full of trees!
+--event_handler.add_lib(require "wg_jungle") --Jungle World Generator, generates a world full of trees!
 
 --require "debug"
 
-Event.register(defines.events.on_player_created, player_joined)
---Event.register(defines.events.on_player_respawned, player_respawned)
+event_handler.add_lib({
+	events = {
+		[defines.events.on_player_created] = player_joined,
+		--[defines.events.on_player_respawned] = player_respawned,
+	},
+})
 
 --Time for the debug code.  If any (not global.) globals are written to at this point, an error will be thrown.
 --eg, x = 2 will throw an error because it's not global.x or local x

@@ -151,10 +151,14 @@ function rpg_stats.hand_mine(event)
     global.rpg_data[name].stats[key] = global.rpg_data[name].stats[key] + 1
 end
 
-Event.register(defines.events.on_player_created, rpg_stats.init_player)
-Event.register(defines.events.on_player_changed_position, rpg_stats.walked)
-Event.register(defines.events.on_entity_died, rpg_stats.slaughter)
-Event.register(defines.events.on_built_entity, rpg_stats.building)
-Event.register(defines.events.on_robot_built_entity, rpg_stats.robot_building)
-Event.register(defines.events.on_player_built_tile, rpg_stats.brick_layer)
-Event.register(defines.events.on_player_mined_entity, rpg_stats.hand_mine)
+return {
+    events = {
+        [defines.events.on_player_created] = rpg_stats.init_player,
+        [defines.events.on_player_changed_position] = rpg_stats.walked,
+        [defines.events.on_entity_died] = rpg_stats.slaughter,
+        [defines.events.on_built_entity] = rpg_stats.building,
+        [defines.events.on_robot_built_entity] = rpg_stats.robot_building,
+        [defines.events.on_player_built_tile] = rpg_stats.brick_layer,
+        [defines.events.on_player_mined_entity] = rpg_stats.hand_mine,
+    },
+}

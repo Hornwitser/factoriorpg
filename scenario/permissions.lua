@@ -271,11 +271,15 @@ function permissions_remove_player(player, group)
 	game.permissions.get_group(group).remove_player(player)
 end
 
-Event.register(defines.events.on_player_joined_game, function(event)
+local events = {}
+events[defines.events.on_player_joined_game] = function(event)
 	local player = game.players[event.player_index]
 	if(global.permissions)then
 		permissions_add_player(player, "normal")
 	end
-end)
+end
 
-Event.register('on_init', permissions_init)
+return {
+	events = events,
+	on_init = permissions_init,
+}

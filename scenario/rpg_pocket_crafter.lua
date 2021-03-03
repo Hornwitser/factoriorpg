@@ -136,11 +136,18 @@ function pcraft.init_player(player)
     global.pcraft[player.index].enabled = false
 end
 
+local events = {
+    [defines.events.on_gui_click] = pcraft.gui_click,
+    [defines.events.on_gui_elem_changed] = pcraft.gui_elem_changed,
+}
+
 --if rpg then
---	Event.register(rpg.on_rpg_gui_created, pcraft.add_gui)
+--    events[rpg.on_rpg_gui_created] = pcraft.add_gui
 --else
-	Event.register(defines.events.on_player_created, pcraft.add_gui)
+    events[defines.events.on_player_created] = pcraft.add_gui
 --end
-Event.register(defines.events.on_gui_click, pcraft.gui_click)
-Event.register(defines.events.on_gui_elem_changed, pcraft.gui_elem_changed)
-script.on_nth_tick(6, pcraft.update)
+
+return {
+    events = events,
+    on_nth_tick = { [6] = pcraft.update },
+}

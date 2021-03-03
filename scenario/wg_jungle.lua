@@ -45,4 +45,8 @@ function wg_jungle_generate(event)
 	end
 end
 
-Event.register(defines.events.on_chunk_generated, wg_jungle_generate)
+return {
+	events = {
+		[defines.events.on_chunk_generated] = wg_jungle_generate,
+	},
+}

@@ -338,15 +338,19 @@ function antigrief.is_well_pump(entity)
     end
 end
 
-Event.register(defines.events.on_tick, antigrief.point_cooloff)
-Event.register(defines.events.on_player_used_capsule, antigrief.arty_remote_ban)
-Event.register(defines.events.on_player_ammo_inventory_changed, antigrief.da_bomb)
-Event.register(defines.events.on_player_cursor_stack_changed, antigrief.remote)
-Event.register(defines.events.on_player_main_inventory_changed, antigrief.hoarder)
-Event.register(defines.events.on_player_left_game, antigrief.armor_drop)
-Event.register(defines.events.on_player_mined_entity, antigrief.pump)
-Event.register(defines.events.on_player_mined_entity, antigrief.ghosting)
-Event.register(defines.events.on_entity_died, antigrief.wanton_destruction)
-Event.register(defines.events.on_built_entity, antigrief.check_size_loginet_size)
-Event.register(defines.events.on_robot_built_entity, antigrief.check_size_loginet_size)
-Event.register(defines.events.on_player_deconstructed_area, antigrief.decon)
+antigrief.events = {
+    [defines.events.on_tick] = antigrief.point_cooloff,
+    [defines.events.on_player_used_capsule] = antigrief.arty_remote_ban,
+    [defines.events.on_player_ammo_inventory_changed] = antigrief.da_bomb,
+    [defines.events.on_player_cursor_stack_changed] = antigrief.remote,
+    [defines.events.on_player_main_inventory_changed] = antigrief.hoarder,
+    [defines.events.on_player_left_game] = antigrief.armor_drop,
+    [defines.events.on_player_mined_entity] = antigrief.pump,
+    [defines.events.on_player_mined_entity] = antigrief.ghosting,
+    [defines.events.on_entity_died] = antigrief.wanton_destruction,
+    [defines.events.on_built_entity] = antigrief.check_size_loginet_size,
+    [defines.events.on_robot_built_entity] = antigrief.check_size_loginet_size,
+    [defines.events.on_player_deconstructed_area] = antigrief.decon,
+}
+
+return antigrief
