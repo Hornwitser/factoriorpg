@@ -1,7 +1,6 @@
 --Heavy lifting stuff here.
 Event = require "lib/event"
 require "utils/topgui" --Allows reordering guis.
-require "utils/bot" --Discord integration
 require "utils/antigrief" --Look for suspicious behavior and report it to admins/log it.
 --require "utils/modular_admin/modular_admin" --FMMO admin tools 
 --require "utils/modular_information/modular_information" --Info windows from FMMO
